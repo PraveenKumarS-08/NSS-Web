@@ -1,0 +1,23 @@
+# National Service Scheme (NSS) Unit - TNGPTC Madurai
+
+> Official portal of the National Service Scheme (NSS) Unit of Tamil Nadu Government Polytechnic College, Madurai-625011, Tamil Nadu, India.
+> Motto: "Not Me, But You" (எனக்கல்ல, உனக்கே)
+
+## Overview
+Tamil Nadu Government Polytechnic College (TNGPTC) Madurai operates active NSS units promoting youth leadership, civic responsibility, and community outreach. The web portal supports volunteer enrollment, event coordination, attendance logging, service hour tracking, and alumni networking.
+
+## Public Endpoints & Pages
+- Homepage: [http://tngptcmadurai.com/nss/](http://tngptcmadurai.com/nss/) - Unit overview, live volunteer & camp counters, and core service pillars.
+- About Us: [http://tngptcmadurai.com/nss/about.php](http://tngptcmadurai.com/nss/about.php) - NSS history, objectives, and Programme Officer information.
+- Events & Camps: [http://tngptcmadurai.com/nss/events.php](http://tngptcmadurai.com/nss/events.php) - Upcoming, ongoing, and past blood drives, tree plantations, and special camps.
+- Photo Gallery: [http://tngptcmadurai.com/nss/gallery.php](http://tngptcmadurai.com/nss/gallery.php) - High-resolution event photographs categorized by year.
+- Contact Office: [http://tngptcmadurai.com/nss/contact.php](http://tngptcmadurai.com/nss/contact.php) - Physical address, official phone, and feedback submission.
+- Volunteer Registration: [http://tngptcmadurai.com/nss/register.php](http://tngptcmadurai.com/nss/register.php) - Student volunteer onboarding.
+- Alumni Registration: [http://tngptcmadurai.com/nss/register-alumni.php](http://tngptcmadurai.com/nss/register-alumni.php) - Senior NSS alumni networking.
+- User Login: [http://tngptcmadurai.com/nss/login.php](http://tngptcmadurai.com/nss/login.php) - Access portals for Administrators, Volunteers, and Alumni.
+
+## Contact Information
+- Institution: Tamil Nadu Government Polytechnic College (TNGPTC)
+- Location: T.P.K Road, Madurai - 625011, Tamil Nadu, India
+- Phone: +91 (0452) 2370461
+- Email: tnptc116@gmail.com

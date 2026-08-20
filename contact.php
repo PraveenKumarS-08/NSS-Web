@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div>
                         <strong style="color:#0f172a; display:block;">Phone Number:</strong>
-                        <span style="color:#475569; font-size:0.92rem;">Office: (0452) 2370461</span>
+                        <a href="tel:+914522370461" title="Tap to call TNGPTC NSS Office" style="color:#1b365d; text-decoration:none; font-weight:600; font-size:0.92rem;">Office: (0452) 2370461</a>
                     </div>
                 </div>
 
@@ -112,8 +112,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <i class="fas fa-envelope" style="font-size:1.1rem;"></i>
                     </div>
                     <div>
-                        <strong style="color:#0f172a; display:block;">Email Addresses:</strong>
-                        <span style="color:#475569; font-size:0.92rem;">tnptc116@gmail.com</span>
+                        <strong style="color:#0f172a; display:block;">Email Address:</strong>
+                        <a href="mailto:tnptc116@gmail.com" title="Email NSS Office" style="color:#1b365d; text-decoration:none; font-weight:600; font-size:0.92rem;">tnptc116@gmail.com</a>
                     </div>
                 </div>
 

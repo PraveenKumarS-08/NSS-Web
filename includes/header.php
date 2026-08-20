@@ -370,7 +370,7 @@ $root = $isDashboard ? '../' : '';
                 </div>
                 <div class="brand-text">
                     <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
-                        <h1>TNGPTC Madurai-11</h1>
+                        <span class="brand-title">TNGPTC Madurai-11</span>
                         <span class="nss-motto-badge"><i class="fas fa-heart"></i> Not Me, But You</span>
                     </div>
                     <p>National Service Scheme • NSS Unit</p>

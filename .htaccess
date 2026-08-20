@@ -1,0 +1,8 @@
+# Apache Error Pages
+ErrorDocument 404 /404.php
+
+# Prevent directory browsing
+Options -Indexes
+
+# UTF-8 Encoding
+AddDefaultCharset UTF-8

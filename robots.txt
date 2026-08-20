@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard/
+Disallow: /includes/
+Disallow: /database/
+Disallow: /uploads/profiles/
+
+Sitemap: http://tngptcmadurai.com/nss/sitemap.xml

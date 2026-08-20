@@ -221,7 +221,7 @@ require_once __DIR__ . '/includes/header.php';
             <p>At Tamil Nadu Government Polytechnic College, Madurai-11, NSS is an integral part of student life. We empower diploma engineering students across all branches to address rural development, healthcare access, literacy, and environmental sustainability.</p>
         </div>
         <div class="emblem-card" data-aos="fade-left">
-            <?= function_exists('getNssLogoImg') ? getNssLogoImg(140, '') : '<img src="assets/images/nss-logo.png" style="width:140px;height:140px;border-radius:50%;border:4px solid #f4a11d;">' ?>
+            <?= function_exists('getNssLogoImg') ? getNssLogoImg(140, '') : '<img src="assets/images/nss-logo.png" alt="NSS Emblem" style="width:140px;height:140px;border-radius:50%;border:4px solid #f4a11d;">' ?>
             <h3>The NSS Badge & Wheel</h3>
             <p>The NSS symbol is based on the giant Rath Wheel of the famous Konark Sun Temple. It signifies continuous movement, creation, and preservation — symbolizing the path to national progress.</p>
         </div>

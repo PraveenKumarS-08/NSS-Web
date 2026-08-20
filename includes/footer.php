@@ -38,8 +38,8 @@ $root = $isDashboard ? '../' : '';
                 <h3>Contact Info</h3>
                 <ul>
                     <li><i class="fas fa-map-marker-alt"></i> TNGPTC, T.P.K Road, Madurai - 625011</li>
-                    <li><i class="fas fa-phone"></i> (0452) 2370461</li>
-                    <li><i class="fas fa-envelope"></i> tnptc116@gmail.com</li>
+                    <li><i class="fas fa-phone"></i> <a href="tel:+914522370461" title="Call NSS College Office" style="color:inherit; text-decoration:none;">(0452) 2370461</a></li>
+                    <li><i class="fas fa-envelope"></i> <a href="mailto:tnptc116@gmail.com" title="Email NSS Office" style="color:inherit; text-decoration:none;">tnptc116@gmail.com</a></li>
                 </ul>
             </div>
             
