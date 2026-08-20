@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$name, $email, $subject, $message]);
             $success = "Thank you! Your message has been sent to the NSS Programme Officer. We will respond shortly.";
         } catch (PDOException $e) {
-            $error = "Unable to send message. Please try again or call the office.";
+            $error = "Unable to send message. Please try again or contact the admin.";
         }
     }
 }
