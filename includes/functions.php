@@ -82,13 +82,63 @@ function getFlashMessage() {
 }
 
 /**
- * Automatically update event statuses in DB based on current date & time
- * Note: Never sets status to 'cancelled' or 'postponed' automatically.
+ * Log user activity into user_activity_logs table
+ */
+function logUserActivity($pdo, $userId, $userName, $userRole = 'volunteer', $actionType = 'General', $description = '') {
+    if (!isset($pdo) || !$pdo || !$userId) return;
+    try {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+        $stmt = $pdo->prepare("
+            INSERT INTO user_activity_logs (user_id, user_name, user_role, action_type, description, ip_address) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([$userId, $userName, $userRole, $actionType, $description, $ip]);
+    } catch (Exception $e) {}
+}
+
+/**
+ * Automatically delete finished events after completion date/time
+ */
+function autoDeleteFinishedEvents($pdo) {
+    if (!isset($pdo) || !$pdo) return;
+    try {
+        // Query events that are marked completed or past their date
+        $stmt = $pdo->query("
+            SELECT id, title FROM events 
+            WHERE status = 'completed' 
+               OR (end_date IS NOT NULL AND end_date < NOW())
+               OR (end_date IS NULL AND event_date < NOW() - INTERVAL 1 DAY)
+        ");
+        $finished_events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($finished_events) {
+            $ids = array_column($finished_events, 'id');
+            // Never auto-delete system event 99 (Parade system event)
+            $ids = array_diff($ids, [99]);
+
+            if (!empty($ids)) {
+                $id_list = implode(',', array_map('intval', $ids));
+                
+                // Reassign attendance records to System Event #99 so student credited hours remain intact
+                $pdo->exec("UPDATE attendance SET event_id = 99 WHERE event_id IN ($id_list)");
+
+                // Delete event registrations
+                $pdo->exec("DELETE FROM event_registrations WHERE event_id IN ($id_list)");
+
+                // Delete finished events
+                $pdo->exec("DELETE FROM events WHERE id IN ($id_list)");
+            }
+        }
+    } catch (Exception $e) {}
+}
+
+/**
+ * Automatically update event statuses in DB and auto-delete finished events
  */
 function autoUpdateEventStatuses($pdo) {
     if (!isset($pdo) || !$pdo) return;
     try {
-        // Mark upcoming events as 'ongoing' if event_date is today / starting (within 24 hours)
+        // Mark upcoming events as 'ongoing' if starting
         $pdo->exec("
             UPDATE events 
             SET status = 'ongoing' 
@@ -97,13 +147,16 @@ function autoUpdateEventStatuses($pdo) {
               AND event_date >= NOW() - INTERVAL 1 DAY
         ");
         
-        // Mark events as 'completed' if more than 24 hours passed since event_date
+        // Mark events as 'completed' if ended
         $pdo->exec("
             UPDATE events 
             SET status = 'completed' 
             WHERE (status = 'upcoming' OR status = 'ongoing') 
-              AND event_date < NOW() - INTERVAL 1 DAY
+              AND ((end_date IS NOT NULL AND end_date < NOW()) OR (end_date IS NULL AND event_date < NOW() - INTERVAL 1 DAY))
         ");
+
+        // Automatically delete finished events
+        autoDeleteFinishedEvents($pdo);
     } catch (Exception $e) {}
 }
 

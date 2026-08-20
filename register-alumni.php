@@ -58,9 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $pdo->beginTransaction();
 
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role, status) VALUES (?, ?, ?, 'alumni', 'pending')");
-                $stmt->execute([$name, $email, $hashed_password]);
+                $stmt->execute([$name, $email, $password]);
                 $user_id = $pdo->lastInsertId();
 
                 $stmt = $pdo->prepare("INSERT INTO alumni (user_id, batch_year, current_position, company, linkedin_url, mobile) VALUES (?, ?, ?, ?, ?, ?)");
@@ -222,12 +221,22 @@ require_once 'includes/header.php';
             <div class="form-row">
                 <div class="form-group" style="margin-bottom:1rem;">
                     <label style="font-weight:600; font-size:0.85rem; color:#334155; display:block; margin-bottom:4px;">Password *</label>
-                    <input type="password" name="password" id="pwd" class="form-control" placeholder="Min 8 chars (A-Z, a-z, 0-9, @#$)" minlength="8" required style="width:100%; padding:0.7rem 1rem; border:1.5px solid #e2e8f0; border-radius:10px;">
+                    <div style="position:relative; width:100%;">
+                        <input type="password" name="password" id="pwd" class="form-control" placeholder="Min 8 chars (A-Z, a-z, 0-9, @#$)" minlength="8" required style="width:100%; padding:0.7rem 2.8rem 0.7rem 1rem; border:1.5px solid #e2e8f0; border-radius:10px;">
+                        <button type="button" onclick="togglePasswordVisibility('pwd', 'pwdIcon')" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#64748b; font-size:1.05rem; padding:4px; z-index:10;">
+                            <i id="pwdIcon" class="fas fa-eye"></i>
+                        </button>
+                    </div>
                     <small style="color:#64748b; font-size:0.75rem;">Must include uppercase, lowercase, number & symbol.</small>
                 </div>
                 <div class="form-group" style="margin-bottom:1rem;">
                     <label style="font-weight:600; font-size:0.85rem; color:#334155; display:block; margin-bottom:4px;">Confirm Password *</label>
-                    <input type="password" name="confirm_password" id="cpwd" class="form-control" placeholder="Re-enter password" minlength="8" required style="width:100%; padding:0.7rem 1rem; border:1.5px solid #e2e8f0; border-radius:10px;">
+                    <div style="position:relative; width:100%;">
+                        <input type="password" name="confirm_password" id="cpwd" class="form-control" placeholder="Re-enter password" minlength="8" required style="width:100%; padding:0.7rem 2.8rem 0.7rem 1rem; border:1.5px solid #e2e8f0; border-radius:10px;">
+                        <button type="button" onclick="togglePasswordVisibility('cpwd', 'cpwdIcon')" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#64748b; font-size:1.05rem; padding:4px; z-index:10;">
+                            <i id="cpwdIcon" class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -258,6 +267,18 @@ require_once 'includes/header.php';
 </div>
 
 <script>
+function togglePasswordVisibility(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (!input) return;
+    if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) icon.className = 'fas fa-eye-slash text-primary';
+    } else {
+        input.type = 'password';
+        if (icon) icon.className = 'fas fa-eye';
+    }
+}
 function speakCaptcha() {
     const code = document.getElementById('captchaVal').textContent;
     if ('speechSynthesis' in window) {

@@ -32,14 +32,16 @@ try {
             $settings[$k] = $v;
         }
 
-        $dbVolunteers = (int)($pdo->query("SELECT COUNT(*) FROM users WHERE role='volunteer'")->fetchColumn() ?: 0);
+        $dbVolunteers = (int)($pdo->query("SELECT COUNT(*) FROM users WHERE role='volunteer' AND status='approved'")->fetchColumn() ?: 0);
         $dbEvents     = (int)($pdo->query("SELECT COUNT(*) FROM events")->fetchColumn() ?: 0);
-        $dbAlumni     = (int)($pdo->query("SELECT COUNT(*) FROM users WHERE role='alumni'")->fetchColumn() ?: 0);
+        $dbAlumniUsers= (int)($pdo->query("SELECT COUNT(*) FROM users WHERE role='alumni' AND status='approved'")->fetchColumn() ?: 0);
+        $dbAlumniTable= (int)($pdo->query("SELECT COUNT(*) FROM alumni")->fetchColumn() ?: 0);
+        $dbAlumni     = max($dbAlumniUsers, $dbAlumniTable);
 
-        $stat1_val = !empty($settings['stat_1_val']) ? $settings['stat_1_val'] : ($dbVolunteers > 0 ? $dbVolunteers : '250+');
-        $stat2_val = !empty($settings['stat_2_val']) ? $settings['stat_2_val'] : ($dbEvents > 0 ? $dbEvents : '48+');
-        $stat3_val = !empty($settings['stat_3_val']) ? $settings['stat_3_val'] : '75+';
-        $stat4_val = !empty($settings['stat_4_val']) ? $settings['stat_4_val'] : ($dbAlumni > 0 ? $dbAlumni . '+' : '500+');
+        $stat1_val = $dbVolunteers > 0 ? $dbVolunteers : '250+';
+        $stat2_val = $dbEvents > 0 ? $dbEvents : '48+';
+        $stat3_val = '75+';
+        $stat4_val = $dbAlumni > 0 ? $dbAlumni : '500+';
 
         $recentEvents = $pdo->query("SELECT * FROM events ORDER BY event_date DESC LIMIT 6")->fetchAll(PDO::FETCH_ASSOC);
         $galleryImages = $pdo->query("SELECT * FROM gallery ORDER BY created_at DESC LIMIT 8")->fetchAll(PDO::FETCH_ASSOC);
@@ -182,51 +184,89 @@ if (empty($heroSlides)) {
     transform: translateY(-3px);
 }
 
-/* Stats Floating Ribbon */
+/* Stats Floating Ribbon — Redesigned */
 .stats-ribbon {
     position: relative;
     z-index: 20;
-    margin-top: -60px;
+    margin-top: -70px;
     padding: 0 5%;
 }
 
 .stats-card-row {
     max-width: 1200px;
     margin: 0 auto;
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 15px 45px rgba(13, 35, 58, 0.1);
+    background: linear-gradient(135deg, #0d233a 0%, #1b365d 50%, #162e4f 100%);
+    border-radius: 22px;
+    box-shadow: 0 20px 60px rgba(13, 35, 58, 0.35), 0 0 0 1px rgba(244,161,29,0.15);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     overflow: hidden;
-    border: 1px solid #e2e8f0;
+    position: relative;
+}
+
+.stats-card-row::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(244,161,29,0.08) 0%, transparent 50%, rgba(244,161,29,0.05) 100%);
+    pointer-events: none;
 }
 
 .stat-box {
-    padding: 2.2rem 1.5rem;
+    padding: 2.5rem 1.5rem 2rem;
     text-align: center;
-    border-right: 1px solid #f1f5f9;
-    transition: all 0.3s ease;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
 }
 
 .stat-box:last-child { border-right: none; }
-.stat-box:hover { background: #f8fafc; transform: translateY(-3px); }
+
+.stat-box:hover {
+    background: rgba(244,161,29,0.08);
+    transform: translateY(-4px);
+}
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(244,161,29,0.12);
+    border: 1px solid rgba(244,161,29,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.3rem;
+    color: #f4a11d;
+    transition: all 0.3s ease;
+}
+
+.stat-box:hover .stat-icon {
+    background: rgba(244,161,29,0.2);
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 4px 20px rgba(244,161,29,0.25);
+}
 
 .stat-number {
     font-family: 'Outfit', sans-serif;
     font-size: 3rem;
     font-weight: 800;
-    color: #1b365d;
-    margin-bottom: 0.2rem;
+    background: linear-gradient(180deg, #ffffff 30%, #f4a11d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.35rem;
     line-height: 1;
 }
 
 .stat-label {
-    color: #64748b;
-    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.82rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 1.2px;
 }
 
 /* Philosophy Section */
@@ -385,7 +425,42 @@ if (empty($heroSlides)) {
 
 @media (max-width: 900px) {
     .hero-title-main { font-size: 2.8rem; }
+    .hero-motto-tamil { font-size: 1.4rem; }
+    .hero-desc { font-size: 1rem; padding: 0 0.5rem; }
+    .hero-swiper-container { height: 85vh; }
     .stats-card-row { grid-template-columns: repeat(2, 1fr); }
+    .stat-box { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .stat-box:nth-child(2n) { border-right: none; }
+    .stat-number { font-size: 2.4rem; }
+    .philosophy-section { padding: 60px 4% 40px; }
+    .section-head h2 { font-size: 2rem; }
+    .faq-section { padding: 60px 4%; }
+}
+@media (max-width: 500px) {
+    .hero-swiper-container { height: 100vh; }
+    .hero-title-main { font-size: 2.2rem; letter-spacing: -0.5px; }
+    .hero-motto-tamil { font-size: 1.15rem; }
+    .hero-desc { font-size: 0.92rem; line-height: 1.6; }
+    .hero-pill { font-size: 0.78rem; padding: 0.4rem 1rem; }
+    .hero-buttons { flex-direction: column; gap: 0.75rem; }
+    .hero-buttons .btn-primary, .hero-buttons .btn-outline {
+        width: 100%; text-align: center; padding: 0.75rem 1.5rem; font-size: 0.95rem;
+    }
+    .stats-ribbon { margin-top: -50px; padding: 0 3%; }
+    .stats-card-row { grid-template-columns: 1fr 1fr; border-radius: 16px; }
+    .stat-box { padding: 1.5rem 1rem; }
+    .stat-number { font-size: 2rem; }
+    .stat-icon { width: 42px; height: 42px; font-size: 1.1rem; }
+    .stat-label { font-size: 0.72rem; letter-spacing: 0.8px; }
+    .philosophy-section { padding: 40px 4% 30px; }
+    .values-grid { grid-template-columns: 1fr !important; gap: 16px; }
+    .value-card { padding: 1.5rem; }
+    .section-head h2 { font-size: 1.5rem; }
+    .section-head p { font-size: 0.88rem; }
+    .faq-section { padding: 40px 4%; }
+    .faq-question { font-size: 0.95rem; padding: 1rem 1.25rem; }
+    .faq-answer { font-size: 0.88rem; padding: 0 1.25rem 1rem; }
+    .hero-content-overlay { padding: 1.5rem 1rem; }
 }
 </style>
 
@@ -426,23 +501,27 @@ if (empty($heroSlides)) {
     <div class="swiper-pagination"></div>
 </div>
 
-<!-- ===== STATS RIBBON ===== -->
+<!-- ===== STATS RIBBON (Redesigned) ===== -->
 <div class="stats-ribbon">
     <div class="stats-card-row" data-aos="fade-up">
         <div class="stat-box">
-            <div class="stat-number counter"><?= htmlspecialchars($stat1_val) ?></div>
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-number nss-counter" data-target="<?= htmlspecialchars($stat1_val) ?>">0</div>
             <div class="stat-label"><?= htmlspecialchars($settings['stat_1_label']) ?></div>
         </div>
         <div class="stat-box">
-            <div class="stat-number counter"><?= htmlspecialchars($stat2_val) ?></div>
+            <div class="stat-icon"><i class="fas fa-campground"></i></div>
+            <div class="stat-number nss-counter" data-target="<?= htmlspecialchars($stat2_val) ?>">0</div>
             <div class="stat-label"><?= htmlspecialchars($settings['stat_2_label']) ?></div>
         </div>
         <div class="stat-box">
-            <div class="stat-number counter"><?= htmlspecialchars($stat3_val) ?></div>
+            <div class="stat-icon"><i class="fas fa-award"></i></div>
+            <div class="stat-number nss-counter" data-target="<?= htmlspecialchars($stat3_val) ?>">0</div>
             <div class="stat-label"><?= htmlspecialchars($settings['stat_3_label']) ?></div>
         </div>
         <div class="stat-box">
-            <div class="stat-number counter"><?= htmlspecialchars($stat4_val) ?></div>
+            <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+            <div class="stat-number nss-counter" data-target="<?= htmlspecialchars($stat4_val) ?>">0</div>
             <div class="stat-label"><?= htmlspecialchars($settings['stat_4_label']) ?></div>
         </div>
     </div>
@@ -506,23 +585,26 @@ if (empty($heroSlides)) {
     <div class="faq-container" data-aos="fade-up">
         <div class="faq-item">
             <div class="faq-question">Who is eligible to join NSS at TNGPTC Madurai? <i class="fas fa-chevron-down"></i></div>
-            <div class="faq-answer">All regular diploma engineering students of 1st, 2nd, and 3rd year across all departments (Shift I, Shift II, Sandwich, Part-Time) are eligible to register.</div>
+            <div class="faq-answer">All regular/shift diploma engineering students of 1st and 2nd year across all departments (Civil, Mechanical, EEE, ECE, Computer, Plastic, Polymer, Robotics, Printing, etc. - Shift I, Shift II, Sandwich, and Part-Time) are eligible to register as NSS volunteers.</div>
         </div>
 
         <div class="faq-item">
-            <div class="faq-question">What is the 240 Hours requirement for NSS Certificate? <i class="fas fa-chevron-down"></i></div>
-            <div class="faq-answer">To earn the official NSS Certificate, a volunteer must complete at least 240 hours of verified service over 2 years (including regular camps, blood donation, parades, and special camps).</div>
+            <div class="faq-question">How do I register as a student volunteer on this portal? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">Click on the <strong>"Join as Volunteer"</strong> button in the navigation bar, fill in your diploma register number, department, academic year, blood group, and mobile details. After submission, your registration request will be verified and approved by the<b> NSS Admin.</b></div>
         </div>
 
-        <div class="faq-item">
-            <div class="faq-question">How is attendance and NSS hours credited? <i class="fas fa-chevron-down"></i></div>
-            <div class="faq-answer">Attendance is credited solely by the official NSS Admin / Programme Officer after verifying volunteer participation in camps, parade practices, and events.</div>
-        </div>
 
         <div class="faq-item">
-            <div class="faq-question">Are alumni allowed to join the NSS Network? <i class="fas fa-chevron-down"></i></div>
-            <div class="faq-answer">Yes! Past NSS volunteers of TNGPTC can register under the Alumni portal to mentor current students and participate in major college camps.</div>
+            <div class="faq-question">How are NSS attendance and service hours credited to my profile? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">Service hours are logged and credited directly by the NSS Programme Officers (Kumar R Sir & Mahalakshmi G Mam or Your Seniors) after verifying your active presence in parade drills, blood donation camps, and outreach events. You can log into your Student Volunteer Dashboard to track your real time hours progress.</div>
         </div>
+
+
+        <div class="faq-item">
+            <div class="faq-question">How can alumni register and stay connected with the NSS Network? <i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer">Former NSS volunteers of TNGPTC Madurai can register via the Alumni Registration portal. Once approved, alumni can mentor current diploma volunteers, attend special events, contribute as guest speakers, and join annual NSS Alumni meets.</div>
+        </div>
+
     </div>
 </section>
 
@@ -546,31 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Number Counter Animation
-    const counters = document.querySelectorAll('.counter');
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const el = entry.target;
-                const text = el.textContent;
-                const target = parseInt(text.replace(/[^0-9]/g, ''));
-                if (!isNaN(target) && target > 0) {
-                    anime({
-                        targets: { val: 0 },
-                        val: target,
-                        round: 1,
-                        duration: 2000,
-                        easing: 'easeOutExpo',
-                        update: function(a) {
-                            el.textContent = Math.round(a.animations[0].currentValue) + (text.includes('+') ? '+' : '');
-                        }
-                    });
-                }
-                observer.unobserve(el);
-            }
-        });
-    }, { threshold: 0.4 });
-    counters.forEach(c => observer.observe(c));
+    // Counter animation moved to separate script block after footer.php
 
     // FAQ Accordion
     document.querySelectorAll('.faq-question').forEach(q => {
@@ -583,3 +641,62 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+
+<!-- Counter Animation: runs AFTER footer.php so anime.js is guaranteed loaded -->
+<script>
+(function() {
+    var counters = document.querySelectorAll('.nss-counter');
+    if (!counters.length) return;
+
+    function animateCounter(el) {
+        var raw = el.getAttribute('data-target') || '0';
+        var target = parseInt(raw.replace(/[^0-9]/g, ''), 10);
+        var hasPlus = raw.indexOf('+') !== -1;
+        if (isNaN(target) || target <= 0) {
+            el.textContent = raw;
+            return;
+        }
+
+        if (typeof anime !== 'undefined') {
+            var obj = { val: 0 };
+            anime({
+                targets: obj,
+                val: target,
+                round: 1,
+                duration: 2200,
+                easing: 'easeOutExpo',
+                update: function() {
+                    el.textContent = Math.round(obj.val) + (hasPlus ? '+' : '');
+                }
+            });
+        } else {
+            // Pure JS easeOut fallback
+            var duration = 2000;
+            var startTime = null;
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                var progress = Math.min((timestamp - startTime) / duration, 1);
+                var eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.round(eased * target) + (hasPlus ? '+' : '');
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+    }
+
+    if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        counters.forEach(function(c) { observer.observe(c); });
+    } else {
+        // Fallback for old browsers
+        counters.forEach(function(c) { animateCounter(c); });
+    }
+})();
+</script>

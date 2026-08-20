@@ -188,7 +188,22 @@ require_once __DIR__ . '/includes/header.php';
 }
 
 @media (max-width: 900px) {
-    .about-split { grid-template-columns: 1fr; }
+    .about-split { grid-template-columns: 1fr; gap: 30px; }
+    .about-hero h1 { font-size: 2.2rem; }
+    .about-split h2 { font-size: 1.8rem; }
+    .objectives-grid { grid-template-columns: repeat(2, 1fr); }
+    .officers-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+}
+@media (max-width: 480px) {
+    .about-hero { padding: 80px 4% 35px; }
+    .about-hero h1 { font-size: 1.75rem; }
+    .about-section { padding: 40px 4%; }
+    .about-split { margin-bottom: 50px; gap: 20px; }
+    .about-split h2 { font-size: 1.5rem; }
+    .about-split p { font-size: 0.92rem; }
+    .objectives-grid { grid-template-columns: 1fr; }
+    .officers-grid { grid-template-columns: 1fr; }
+    .emblem-card { padding: 1.5rem; }
 }
 </style>
 
@@ -267,23 +282,20 @@ require_once __DIR__ . '/includes/header.php';
     <div class="officers-grid">
         <div class="officer-card" data-aos="fade-up" data-aos-delay="100">
             <div class="officer-avatar"><i class="fas fa-user-tie"></i></div>
-            <h3>Principal / Patron</h3>
-            <div class="role-badge">TNGPTC Madurai Administration</div>
-            <p>Guiding overall NSS activities, camp approvals, and institution-wide community outreach programs.</p>
+            <h3>Tmt. T.HEMA CHITRA</h3>
+            <div class="role-badge">Principal / Patron • NSS</div>
         </div>
 
         <div class="officer-card" data-aos="fade-up" data-aos-delay="200">
             <div class="officer-avatar"><i class="fas fa-user-shield"></i></div>
-            <h3>Programme Officer — Unit I</h3>
-            <div class="role-badge">Faculty Lead • Unit I</div>
-            <p>Coordinating blood donation camps, health awareness rallies, and regular weekend volunteer service hours.</p>
+            <h3>Kumar R</h3>
+            <div class="role-badge">Programme Officer • NSS</div>
         </div>
 
         <div class="officer-card" data-aos="fade-up" data-aos-delay="300">
             <div class="officer-avatar"><i class="fas fa-user-shield"></i></div>
-            <h3>Programme Officer — Unit II</h3>
-            <div class="role-badge">Faculty Lead • Unit II</div>
-            <p>Managing village adoption special 7-day camps, parade drills, and green campus plantation drives.</p>
+            <h3>Mahalakshmi G</h3>
+            <div class="role-badge">Programme Officer • NSS</div>
         </div>
     </div>
 </section>

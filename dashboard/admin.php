@@ -37,9 +37,11 @@ foreach ($dbSettings as $k => $v) {
     $site_settings[$k] = $v;
 }
 
-// Fetch counts
-$total_volunteers = (int)$pdo->query("SELECT COUNT(*) FROM users WHERE role='volunteer'")->fetchColumn();
-$total_alumni     = (int)$pdo->query("SELECT COUNT(*) FROM users WHERE role='alumni'")->fetchColumn();
+// Fetch counts (Only count approved active members)
+$total_volunteers = (int)$pdo->query("SELECT COUNT(*) FROM users WHERE role='volunteer' AND status='approved'")->fetchColumn();
+$dbAlumniUsers   = (int)$pdo->query("SELECT COUNT(*) FROM users WHERE role='alumni' AND status='approved'")->fetchColumn();
+$dbAlumniTable   = (int)$pdo->query("SELECT COUNT(*) FROM alumni")->fetchColumn();
+$total_alumni     = max($dbAlumniUsers, $dbAlumniTable);
 $pending_approvals= (int)$pdo->query("SELECT COUNT(*) FROM users WHERE status='pending' AND role != 'admin'")->fetchColumn();
 $total_events     = (int)$pdo->query("SELECT COUNT(*) FROM events")->fetchColumn();
 $total_gallery    = (int)$pdo->query("SELECT COUNT(*) FROM gallery")->fetchColumn();
@@ -47,8 +49,8 @@ $total_gallery    = (int)$pdo->query("SELECT COUNT(*) FROM gallery")->fetchColum
 // Fetch dept stats for chart (grouped by trimmed department)
 $dept_stats = $pdo->query("SELECT TRIM(v.department) as dept_name, COUNT(*) as count FROM volunteers v JOIN users u ON v.user_id = u.id WHERE u.role = 'volunteer' AND u.status = 'approved' AND v.department IS NOT NULL AND v.department != '' GROUP BY TRIM(v.department)")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// Fetch event status stats for chart
-$event_status_stats = $pdo->query("SELECT status, COUNT(*) as count FROM events GROUP BY status")->fetchAll(PDO::FETCH_KEY_PAIR);
+// Fetch academic year stats for chart (Replacing Activity Status Overview)
+$year_stats = $pdo->query("SELECT CONCAT(v.year, ' Year') as year_name, COUNT(*) as count FROM volunteers v JOIN users u ON v.user_id = u.id WHERE u.role = 'volunteer' AND u.status = 'approved' AND v.year IS NOT NULL AND v.year != '' GROUP BY v.year ORDER BY FIELD(v.year, 'I', 'II', 'III')")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 // Fetch recent pending users
 $recent_pending = $pdo->query("SELECT id, name, email, role, created_at FROM users WHERE status='pending' AND role != 'admin' ORDER BY created_at DESC LIMIT 5")->fetchAll();
@@ -64,7 +66,7 @@ require_once '../includes/header.php';
         <header class="topbar glass-panel">
             <h2><i class="fas fa-gauge text-primary"></i> Admin Overview Dashboard</h2>
             <div class="user-info">
-                <span class="badge status-approved"><i class="fas fa-shield-alt"></i> Administrator</span>
+                <span class="badge status-approved" style="font-size:0.85rem; padding: 6px 14px;"><i class="fas fa-user-shield"></i> Logged in as: <strong><?= htmlspecialchars($_SESSION['name'] ?? 'NSS Admin') ?></strong></span>
             </div>
         </header>
 
@@ -102,9 +104,9 @@ require_once '../includes/header.php';
             </div>
 
             <div class="dashboard-card glass-panel">
-                <h3><i class="fas fa-chart-pie text-accent"></i> Activity Status Overview</h3>
+                <h3><i class="fas fa-graduation-cap text-accent"></i> Volunteers by Academic Year</h3>
                 <div style="position:relative; height:320px;">
-                    <canvas id="statusChart"></canvas>
+                    <canvas id="yearChart"></canvas>
                 </div>
             </div>
         </div>
@@ -257,26 +259,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1, color: '#475569' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                    y: { beginAtZero: true, ticks: { precision: 0, stepSize: 1, color: '#475569' }, grid: { color: 'rgba(0,0,0,0.05)' } },
                     x: { ticks: { color: '#475569', maxRotation: 45, font: { size: 10 } }, grid: { display: false } }
                 }
             }
         });
     }
 
-    // 2. Status Doughnut Chart
-    const statusCtx = document.getElementById('statusChart');
-    if (statusCtx) {
-        const statusLabels = <?= json_encode(array_map('ucfirst', array_keys($event_status_stats ?: []))) ?>;
-        const statusData = <?= json_encode(array_values($event_status_stats ?: [])) ?>;
+    // 2. Volunteers by Academic Year Doughnut Chart
+    const yearCtx = document.getElementById('yearChart');
+    if (yearCtx) {
+        const yearLabels = <?= json_encode(array_keys($year_stats ?: ['I Year' => 0, 'II Year' => 0, 'III Year' => 0])) ?>;
+        const yearData = <?= json_encode(array_values($year_stats ?: ['I Year' => 0, 'II Year' => 0, 'III Year' => 0])) ?>;
         
-        new Chart(statusCtx.getContext('2d'), {
+        new Chart(yearCtx.getContext('2d'), {
             type: 'doughnut',
             data: {
-                labels: statusLabels,
+                labels: yearLabels,
                 datasets: [{
-                    data: statusData,
-                    backgroundColor: ['#1b365d', '#f4a11d', '#94a3b8', '#92400e', '#b71c1c'],
+                    data: yearData,
+                    backgroundColor: ['#1b365d', '#f4a11d', '#166534', '#0284c7'],
                     borderWidth: 2
                 }]
             },
@@ -287,6 +289,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     legend: { position: 'bottom', labels: { font: { size: 11 } } }
                 }
             }
+        });
+    }
+
+    // 3. Anime.js Entrance Animations for Admin Stat Cards & Dashboard Layout
+    if (window.anime) {
+        anime({
+            targets: '.stat-card',
+            scale: [0.9, 1],
+            opacity: [0, 1],
+            translateY: [20, 0],
+            delay: anime.stagger(100),
+            easing: 'easeOutCubic',
+            duration: 600
+        });
+
+        anime({
+            targets: '.dashboard-card',
+            opacity: [0, 1],
+            translateY: [25, 0],
+            delay: anime.stagger(120, {start: 300}),
+            easing: 'easeOutQuad',
+            duration: 700
         });
     }
 });

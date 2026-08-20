@@ -48,10 +48,25 @@ if (empty($groupedByYear)) {
     </div>
     <?php endif; ?>
 
-    <div class="gallery-filters" style="display:flex; justify-content:center; gap:12px; margin-bottom:50px; flex-wrap:wrap;">
-        <?php foreach ($categories as $idx => $cat): ?>
-            <button type="button" class="filter-btn <?= $idx === 0 ? 'active' : '' ?>" data-filter="<?= strtolower($cat) ?>"><?= $cat ?></button>
-        <?php endforeach; ?>
+    <!-- Filter Controls Bar: Category & Year -->
+    <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin-bottom:40px; flex-wrap:wrap;">
+        <div class="gallery-filters" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+            <?php foreach ($categories as $idx => $cat): ?>
+                <button type="button" class="filter-btn <?= $idx === 0 ? 'active' : '' ?>" data-filter="<?= strtolower($cat) ?>"><?= $cat ?></button>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- Year Selector Dropdown -->
+        <div style="display:flex; align-items:center; gap:8px; background:#f0f2f5; padding:6px 16px; border-radius:30px; border:1px solid #cbd5e1;">
+            <i class="fas fa-calendar-alt text-primary"></i>
+            <span style="font-weight:700; font-size:0.88rem; color:#1b365d;">Year:</span>
+            <select id="yearFilterSelect" style="background:none; border:none; font-weight:700; color:#1b365d; cursor:pointer; font-size:0.9rem; outline:none;">
+                <option value="all">All Years</option>
+                <?php foreach (array_keys($groupedByYear) as $y): ?>
+                    <option value="<?= $y ?>"><?= $y ?> Academic Year</option>
+                <?php endforeach; ?>
+            </select>
+        </div>
     </div>
 
     <!-- Gallery Grouped By Year Sections -->
@@ -71,7 +86,7 @@ if (empty($groupedByYear)) {
                     $path = 'uploads/gallery/' . $path;
                 }
             ?>
-                <div class="gallery-item" data-category="<?= strtolower($img['category'] ?? 'all') ?>" data-aos="zoom-in" onclick="openLightbox('<?= htmlspecialchars($path) ?>', '<?= htmlspecialchars($img['title'] ?? '') ?>')">
+                <div class="gallery-item" data-category="<?= strtolower($img['category'] ?? 'all') ?>" data-year="<?= $year ?>" data-aos="zoom-in" onclick="openLightbox('<?= htmlspecialchars($path) ?>', '<?= htmlspecialchars($img['title'] ?? '') ?>')">
                     <img src="<?= htmlspecialchars($path) ?>" alt="<?= htmlspecialchars($img['title'] ?? 'NSS Photo') ?>" style="width:100%; height:250px; object-fit:cover; border-radius:12px;">
                     <div class="gallery-overlay">
                         <h3 class="gallery-title" style="color:white; margin:0; font-size:1.1rem;"><?= htmlspecialchars($img['title'] ?? 'NSS Activity') ?></h3>
@@ -96,25 +111,53 @@ if (empty($groupedByYear)) {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const filterBtns = document.querySelectorAll('.filter-btn');
+    const yearSelect = document.getElementById('yearFilterSelect');
+    const yearSections = document.querySelectorAll('.year-section');
     const items = document.querySelectorAll('.gallery-item');
+
+    let activeCat = 'all';
+    let activeYear = 'all';
+
+    function applyFilters() {
+        yearSections.forEach(sec => {
+            const secYear = sec.getAttribute('data-year');
+            if (activeYear === 'all' || activeYear === secYear) {
+                sec.style.display = 'block';
+            } else {
+                sec.style.display = 'none';
+            }
+        });
+
+        items.forEach(item => {
+            const itemCat = item.getAttribute('data-category');
+            const itemYear = item.getAttribute('data-year');
+
+            const matchCat = (activeCat === 'all' || itemCat === activeCat);
+            const matchYear = (activeYear === 'all' || activeYear === itemYear);
+
+            if (matchCat && matchYear) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            const cat = btn.getAttribute('data-filter');
-            
-            items.forEach(item => {
-                const itemCat = item.getAttribute('data-category');
-                if (cat === 'all' || itemCat === cat) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+            activeCat = btn.getAttribute('data-filter');
+            applyFilters();
         });
     });
+
+    if (yearSelect) {
+        yearSelect.addEventListener('change', () => {
+            activeYear = yearSelect.value;
+            applyFilters();
+        });
+    }
 });
 
 function openLightbox(src, caption) {
@@ -127,5 +170,23 @@ function closeLightbox() {
     document.getElementById('galleryLightbox').style.display = 'none';
 }
 </script>
+
+<style>
+@media (max-width: 768px) {
+    .gallery-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
+    .gallery-grid img { height: 180px !important; }
+    .page-hero { padding: 80px 4% 30px !important; }
+    .page-hero .page-title { font-size: 2rem !important; }
+    .gallery-filters { gap: 6px !important; }
+    .filter-btn { font-size: 0.8rem; padding: 0.45rem 0.85rem; }
+    .year-section h2 { font-size: 1.5rem !important; }
+}
+@media (max-width: 480px) {
+    .gallery-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .gallery-grid img { height: 220px !important; border-radius: 10px !important; }
+    .page-hero .page-title { font-size: 1.65rem !important; }
+    #galleryLightbox img { max-width: 95vw !important; max-height: 70vh !important; }
+}
+</style>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

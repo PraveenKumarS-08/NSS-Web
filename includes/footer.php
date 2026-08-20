@@ -37,9 +37,9 @@ $root = $isDashboard ? '../' : '';
             <div class="footer-col col-contact">
                 <h3>Contact Info</h3>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> TNGPTC, Bye-Pass Road, Madurai - 625011</li>
+                    <li><i class="fas fa-map-marker-alt"></i> TNGPTC, T.P.K Road, Madurai - 625011</li>
                     <li><i class="fas fa-phone"></i> (0452) 2370461</li>
-                    <li><i class="fas fa-envelope"></i> tngptcmadurai@gmail.com</li>
+                    <li><i class="fas fa-envelope"></i> tnptc116@gmail.com</li>
                 </ul>
             </div>
             
@@ -60,8 +60,8 @@ $root = $isDashboard ? '../' : '';
             <div style="max-width: 1000px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap; color: #94a3b8; font-size: 0.88rem;">
                 <i class="fas fa-code text-accent" style="font-size:1rem;"></i>
                 <span>Website Designed & Developed by 3rd Year CSE Students (Batch 2024-2027):</span>
-                <strong style="color: #ffffff; background: rgba(244,161,29,0.15); padding: 3px 12px; border-radius: 20px; border: 1px solid rgba(244,161,29,0.3);">
-                    <i class="fas fa-user-graduate text-accent"></i> Santosh N & Praveen Kumar S
+                <strong style="color: #ffffff; background: rgba(244,161,29,0.15); padding: 4px 14px; border-radius: 20px; border: 1px solid rgba(244,161,29,0.3);">
+                    <i class="fas fa-user-graduate text-accent"></i> <a href="https://linkedin.com/in/santosh-nagendran" target="_blank" rel="noopener noreferrer" style="color:#ffffff; text-decoration:none;" onmouseover="this.style.color='#f4a11d'" onmouseout="this.style.color='#ffffff'">Santosh N</a> & Praveen Kumar S
                 </strong>
             </div>
         </div>
@@ -91,6 +91,17 @@ $root = $isDashboard ? '../' : '';
         .nss-badge { display: inline-block; background: #b71c1c; color: white; padding: 0.4rem 1.1rem; border-radius: 20px; font-weight: 700; font-size: 0.82rem; border: 1px solid #f4a11d; }
         .footer-bottom { text-align: center; padding: 1.25rem; margin-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.06); color: #64748b; font-size: 0.85rem; }
         @media (max-width: 992px) { .footer.dashboard-footer { margin-left: 0; } }
+        @media (max-width: 768px) {
+            .footer-container { grid-template-columns: 1fr 1fr; gap: 1.5rem; padding: 0 4%; }
+            .footer { padding-top: 2.5rem; }
+        }
+        @media (max-width: 480px) {
+            .footer-container { grid-template-columns: 1fr; gap: 1.25rem; }
+            .footer-col h3 { font-size: 1rem; margin-bottom: 0.75rem; }
+            .footer-col p { font-size: 0.85rem; }
+            .footer-bottom { font-size: 0.78rem; padding: 1rem; }
+            .footer-logo h2 { font-size: 1.05rem !important; }
+        }
     </style>
 
     <!-- JS Libraries -->

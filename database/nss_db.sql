@@ -45,6 +45,7 @@ CREATE TABLE events (
     title VARCHAR(200) NOT NULL,
     description TEXT,
     event_date DATETIME NOT NULL,
+    end_date DATETIME DEFAULT NULL,
     location VARCHAR(200),
     image VARCHAR(255) DEFAULT NULL,
     image_path VARCHAR(255) DEFAULT NULL,
@@ -133,9 +134,9 @@ CREATE TABLE hero_slides (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insert default admin (password: NSS@Admin2024)
+-- Insert default admin accounts (password stored as plaintext per college admin requirement)
 INSERT INTO users (name, email, password, role, status) VALUES
-('NSS Admin', 'admin@tngptcmadurai.com', '$2y$10$TKh8H1.PfuBqbMpT2GhcEufrILjRm3GIalcuyFgOkbV4OKDkNVAXS', 'admin', 'approved');
+('NSS Web Admin (Santosh N)', 'admin@tngptcmadurai.com', 'NSS@Admin2024', 'admin', 'approved');
 
 -- Sample events
 INSERT INTO events (title, description, event_date, location, category, status, created_by) VALUES
@@ -164,6 +165,24 @@ INSERT INTO site_settings (setting_key, setting_value) VALUES
 ('stat_3_label', 'YEARS OF SERVICE'),
 ('stat_3_val', '75+'),
 ('stat_4_label', 'ALUMNI NETWORK'),
-('stat_4_val', '500+')
+('stat_4_val', '')
 ON DUPLICATE KEY UPDATE setting_key=setting_key;
+
+-- User Activity Logs (audit trail)
+CREATE TABLE IF NOT EXISTS user_activity_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    user_name VARCHAR(100) NOT NULL,
+    user_role VARCHAR(50) DEFAULT 'volunteer',
+    action_type VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    ip_address VARCHAR(50) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- System event for preserving attendance hours of deleted events
+INSERT INTO events (id, title, description, event_date, location, category, status, created_by) VALUES
+(99, 'Regular NSS Parade & Drill Activities', 'System event - hours re-assigned from completed/deleted events are preserved here.', '2026-01-01 00:00:00', 'College Campus', 'General', 'ongoing', 1)
+ON DUPLICATE KEY UPDATE title=title;
 

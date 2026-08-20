@@ -25,28 +25,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$email, $role]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['password'])) {
-            if ($role !== 'admin' && $user['status'] === 'pending') {
-                $error = "Your account is pending approval by NSS Admin.";
-            } elseif ($role !== 'admin' && $user['status'] === 'rejected') {
-                $error = "Your account application has been rejected. Please contact NSS office.";
-            } else {
-                // Use consistent session keys that match auth.php
-                $_SESSION['user_id']   = $user['id'];
-                $_SESSION['user_role'] = $user['role'];  // used by currentRole()
-                $_SESSION['role']      = $user['role'];  // keep for compatibility
-                $_SESSION['name']      = $user['name'];
-                $_SESSION['user_data'] = [
-                    'name'          => $user['name'],
-                    'email'         => $user['email'],
-                    'status'        => $user['status'],
-                    'profile_photo' => $user['profile_photo'] ?? null,
-                ];
+        if ($user) {
+            $passwordValid = false;
+            if (password_verify($password, $user['password'])) {
+                $passwordValid = true;
+            } elseif ($password === $user['password']) {
+                $passwordValid = true;
+            }
 
-                if ($role === 'admin')     { header("Location: dashboard/admin.php");     exit; }
-                elseif ($role === 'volunteer') { header("Location: dashboard/volunteer.php"); exit; }
-                elseif ($role === 'alumni')    { header("Location: dashboard/alumni.php");    exit; }
-                exit;
+            if ($passwordValid) {
+                if ($role !== 'admin' && $user['status'] === 'pending') {
+                    $error = "Your account is pending approval by NSS Admin.";
+                } elseif ($role !== 'admin' && $user['status'] === 'rejected') {
+                    $error = "Your account application has been rejected. Please contact NSS office.";
+                } else {
+                    $_SESSION['user_id']   = $user['id'];
+                    $_SESSION['user_role'] = $user['role'];
+                    $_SESSION['role']      = $user['role'];
+                    $_SESSION['name']      = $user['name'];
+                    $_SESSION['user_data'] = [
+                        'name'          => $user['name'],
+                        'email'         => $user['email'],
+                        'status'        => $user['status'],
+                        'profile_photo' => $user['profile_photo'] ?? null,
+                    ];
+
+                    logUserActivity($pdo, $user['id'], $user['name'], $user['role'], 'Login', 'Logged into ' . ucfirst($role) . ' portal');
+
+                    if ($role === 'admin')     { header("Location: dashboard/admin.php");     exit; }
+                    elseif ($role === 'volunteer') { header("Location: dashboard/volunteer.php"); exit; }
+                    elseif ($role === 'alumni')    { header("Location: dashboard/alumni.php");    exit; }
+                    exit;
+                }
+            } else {
+                $error = "Invalid credentials for the selected (" . ucfirst($role) . ") login.";
             }
         } else {
             $error = "Invalid credentials for the selected (" . ucfirst($role) . ") login.";
@@ -112,9 +124,9 @@ require_once 'includes/header.php';
                 <div class="input-with-icon" style="position:relative;">
                     <i data-lucide="key-round"></i>
                     <input type="password" name="password" id="password" class="form-control" required placeholder="Enter password" style="padding-right: 2.8rem;">
-                    <button type="button" id="togglePassword" title="Show/Hide Password"
-                        style="position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#64748b; padding:0; display:flex; align-items:center; z-index:5;">
-                        <i id="eyeIcon" data-lucide="eye" style="width:18px; height:18px;"></i>
+                    <button type="button" id="togglePasswordBtn" title="Show/Hide Password" onclick="toggleLoginPassword()"
+                        style="position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#64748b; padding:4px; display:flex; align-items:center; justify-content:center; z-index:10;">
+                        <i id="passwordEyeIcon" class="fas fa-eye" style="font-size:1.05rem;"></i>
                     </button>
                 </div>
             </div>
@@ -143,6 +155,29 @@ require_once 'includes/header.php';
 </div>
 
 <script>
+function toggleLoginPassword() {
+    const pwInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('passwordEyeIcon');
+    if (!pwInput || !eyeIcon) return;
+    
+    if (pwInput.type === 'password') {
+        pwInput.type = 'text';
+        eyeIcon.className = 'fas fa-eye-slash text-primary';
+    } else {
+        pwInput.type = 'password';
+        eyeIcon.className = 'fas fa-eye';
+    }
+    
+    if (window.anime) {
+        anime({
+            targets: eyeIcon,
+            scale: [1.3, 1],
+            duration: 300,
+            easing: 'easeOutBack'
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const tabs = document.querySelectorAll('.tab-btn');
     const roleInput = document.getElementById('roleInput');
@@ -171,6 +206,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (forgotPasswordLink) forgotPasswordLink.style.display = 'none';
             }
             if (window.lucide) lucide.createIcons();
+
+            if (window.anime) {
+                anime({
+                    targets: clickedBtn,
+                    scale: [0.95, 1],
+                    duration: 300,
+                    easing: 'easeOutCubic'
+                });
+            }
         });
     });
 
@@ -188,18 +232,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Show / Hide Password Toggle
-    const toggleBtn = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
-    const eyeIcon = document.getElementById('eyeIcon');
+    // Anime.js Entrance Animation for Login Card
+    if (window.anime) {
+        anime({
+            targets: '.login-card',
+            translateY: [40, 0],
+            opacity: [0, 1],
+            easing: 'easeOutCubic',
+            duration: 800,
+            delay: 100
+        });
+        
+        anime({
+            targets: '.auth-tabs .tab-btn',
+            opacity: [0, 1],
+            translateY: [15, 0],
+            delay: anime.stagger(100, {start: 300}),
+            easing: 'easeOutQuad',
+            duration: 500
+        });
 
-    if (toggleBtn && passwordInput && eyeIcon) {
-        toggleBtn.addEventListener('click', function () {
-            const isHidden = passwordInput.type === 'password';
-            passwordInput.type = isHidden ? 'text' : 'password';
-            eyeIcon.setAttribute('data-lucide', isHidden ? 'eye-off' : 'eye');
-            if (window.lucide) lucide.createIcons();
-            passwordInput.focus();
+        anime({
+            targets: '.form-group',
+            opacity: [0, 1],
+            translateX: [-20, 0],
+            delay: anime.stagger(120, {start: 450}),
+            easing: 'easeOutCubic',
+            duration: 600
         });
     }
 });

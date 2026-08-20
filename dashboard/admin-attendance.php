@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_parade'])) {
         if ($existing) {
             $pdo->prepare("UPDATE attendance SET hours = ?, marked_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$hrs, $existing['id']]);
         } else {
-            $pdo->prepare("INSERT INTO attendance (user_id, event_id, hours, type, attendance_date) VALUES (?, NULL, ?, ?, ?)")->execute([$uid, $hrs, $parade_type, $parade_date]);
+            $pdo->prepare("INSERT INTO attendance (user_id, event_id, hours, type, attendance_date) VALUES (?, 99, ?, ?, ?)")->execute([$uid, $hrs, $parade_type, $parade_date]);
         }
         $count++;
     }
@@ -75,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['direct_credit'])) {
     $reason = trim($_POST['credit_reason'] ?? 'Special Duty / NSS Contribution');
 
     if ($user_id > 0 && $hours > 0) {
-        $stmt = $pdo->prepare("INSERT INTO attendance (user_id, event_id, hours, type, attendance_date) VALUES (?, NULL, ?, 'special', CURRENT_DATE)");
-        $stmt->execute([$user_id, $hours]);
+        $stmt = $pdo->prepare("INSERT INTO attendance (user_id, event_id, hours, type, attendance_date, description) VALUES (?, 99, ?, 'special', CURRENT_DATE, ?)");
+        $stmt->execute([$user_id, $hours, $reason]);
         $msg = "Directly credited {$hours} NSS hours to volunteer!";
     } else {
         $error = "Please select a volunteer and enter valid hours (> 0).";
@@ -95,19 +95,21 @@ if (isset($_POST['delete_attendance_id'])) {
 $events = $pdo->query("SELECT id, title, event_date, location FROM events ORDER BY event_date DESC")->fetchAll();
 $selected_event_id = (int)($_GET['event_id'] ?? $_POST['event_id'] ?? ($events[0]['id'] ?? 0));
 
-// Fetch Approved Volunteers for Event Tab
+// Fetch Approved Volunteers who REGISTERED for the selected Event
 $event_volunteers = [];
 if ($selected_event_id > 0) {
     $stmt = $pdo->prepare("
         SELECT u.id as user_id, u.name, u.email, v.register_number, v.department, v.year, v.blood_group, v.mobile,
-               a.hours as credited_hours, a.id as attendance_id
+               a.hours as credited_hours, a.id as attendance_id, er.registered_at
         FROM users u
         JOIN volunteers v ON u.id = v.user_id
+        LEFT JOIN event_registrations er ON (er.user_id = u.id AND er.event_id = ?)
         LEFT JOIN attendance a ON (a.user_id = u.id AND a.event_id = ? AND a.type = 'event')
         WHERE u.role = 'volunteer' AND u.status = 'approved'
+          AND (er.id IS NOT NULL OR a.id IS NOT NULL)
         ORDER BY v.department, u.name ASC
     ");
-    $stmt->execute([$selected_event_id]);
+    $stmt->execute([$selected_event_id, $selected_event_id]);
     $event_volunteers = $stmt->fetchAll();
 }
 
@@ -116,7 +118,7 @@ $parade_date = $_GET['parade_date'] ?? date('Y-m-d');
 $parade_type_filter = $_GET['parade_type'] ?? 'parade';
 
 $stmt = $pdo->prepare("
-    SELECT u.id as user_id, u.name, u.email, v.register_number, v.department, v.year,
+    SELECT u.id as user_id, u.name, u.email, u.profile_photo, v.register_number, v.department, v.year,
            a.hours as credited_hours, a.id as attendance_id
     FROM users u
     JOIN volunteers v ON u.id = v.user_id
@@ -129,7 +131,7 @@ $parade_volunteers = $stmt->fetchAll();
 
 // Fetch ALL Approved Volunteers for Direct Credit Tab
 $all_approved_volunteers = $pdo->query("
-    SELECT u.id as user_id, u.name, v.register_number, v.department
+    SELECT u.id as user_id, u.name, u.profile_photo, v.register_number, v.department
     FROM users u
     JOIN volunteers v ON u.id = v.user_id
     WHERE u.role = 'volunteer' AND u.status = 'approved'
@@ -138,7 +140,7 @@ $all_approved_volunteers = $pdo->query("
 
 // Recent Attendance Log
 $recent_attendance = $pdo->query("
-    SELECT a.id, a.hours, a.marked_at, a.type, a.attendance_date, u.name, v.register_number, v.department, 
+    SELECT a.id, a.hours, a.marked_at, a.type, a.attendance_date, u.name, u.profile_photo, v.register_number, v.department, 
            COALESCE(e.title, CASE a.type WHEN 'parade' THEN 'Regular Parade' WHEN 'parade_practice' THEN 'Parade Practice' WHEN 'special' THEN 'Special Duty Credit' ELSE 'NSS Activity' END) as event_title
     FROM attendance a
     JOIN users u ON a.user_id = u.id
@@ -159,8 +161,9 @@ require_once '../includes/header.php';
             <div class="d-flex align-items-center gap-3">
                 <h2><i class="fas fa-user-check text-primary"></i> Volunteer Attendance & Hours Credit</h2>
             </div>
+            <a href="export-attendance.php" class="btn btn-outline"><i class="fas fa-download"></i> Export Attendance CSV</a>
             <div class="user-info">
-                <span class="badge status-approved"><i class="fas fa-shield-alt"></i> Admin Control</span>
+                <span class="badge status-approved" style="font-size:0.85rem; padding:6px 14px;"><i class="fas fa-user-shield"></i> Logged in as: <strong><?= htmlspecialchars($_SESSION['name'] ?? 'NSS Admin') ?></strong></span>
             </div>
         </header>
 
@@ -202,7 +205,10 @@ require_once '../includes/header.php';
             </div>
 
             <div class="dashboard-card glass-panel">
-                <h3><i class="fas fa-users text-primary"></i> Volunteer Attendance & Hours Credit</h3>
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <h3 style="margin:0;"><i class="fas fa-users text-primary"></i> Registered Volunteer List & Attendance Marking</h3>
+                    <span class="badge status-approved" style="font-size:0.85rem;"><i class="fas fa-clipboard-check"></i> Registered for Event: <?= count($event_volunteers) ?></span>
+                </div>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -218,8 +224,19 @@ require_once '../includes/header.php';
                             <?php foreach ($event_volunteers as $vol): ?>
                             <tr>
                                 <td>
-                                    <strong><?= htmlspecialchars($vol['name']) ?></strong><br>
-                                    <small class="text-muted"><?= htmlspecialchars($vol['email']) ?></small>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <?php if (!empty($vol['profile_photo'])): ?>
+                                            <img src="../<?= htmlspecialchars($vol['profile_photo']) ?>" alt="Avatar" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:2px solid #f4a11d; flex-shrink:0;">
+                                        <?php else: ?>
+                                            <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#1b365d,#0d233a); color:#f4a11d; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.95rem; flex-shrink:0; border:2px solid #cbd5e1;">
+                                                <?= strtoupper(substr($vol['name'] ?? 'V', 0, 1)) ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        <div>
+                                            <strong><?= htmlspecialchars($vol['name']) ?></strong><br>
+                                            <small class="text-muted"><?= htmlspecialchars($vol['email']) ?></small>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
                                     <strong><?= htmlspecialchars($vol['register_number'] ?? 'N/A') ?></strong><br>
@@ -256,7 +273,7 @@ require_once '../includes/header.php';
                             </tr>
                             <?php endforeach; ?>
                             <?php if (!$event_volunteers): ?>
-                            <tr><td colspan="5" class="text-center py-4">No volunteers found.</td></tr>
+                            <tr><td colspan="5" class="text-center py-4 text-muted"><i class="fas fa-info-circle"></i> No volunteers have registered for this event yet.</td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>

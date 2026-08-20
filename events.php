@@ -33,11 +33,27 @@ try {
 } catch (Exception $e) { }
 
 if (empty($events)) {
+    try {
+        if (isset($pdo)) {
+            $pdo->exec("
+                INSERT INTO events (id, title, description, event_date, end_date, location, category, status, created_by) VALUES
+                (1, 'Blood Donation Camp 2026', 'Annual blood donation camp organized by NSS Unit, TNGPTC Madurai in collaboration with Rajaji Government Hospital.', '2026-09-15 09:00:00', '2026-09-15 17:00:00', 'College Premises, Madurai-11', 'Health', 'upcoming', 1),
+                (2, 'Tree Plantation & Clean Campus Drive', 'Planting 500 indigenous saplings in and around the campus as part of Green India Mission.', '2026-10-01 08:00:00', '2026-10-01 13:00:00', 'College Campus', 'Environment', 'upcoming', 1),
+                (3, 'Village Adoption Program - Phase III', 'NSS volunteers serving the adopted village - community development, health awareness, and literacy programs.', '2026-11-10 07:00:00', '2026-11-10 18:00:00', 'Alanganallur Village, Madurai', 'Community', 'upcoming', 1),
+                (4, 'National Disaster Management Workshop', 'Hands-on training session on emergency first-aid, fire safety, and disaster relief techniques.', '2026-12-05 10:00:00', '2026-12-05 16:00:00', 'College Auditorium', 'Training', 'upcoming', 1)
+                ON DUPLICATE KEY UPDATE title=VALUES(title);
+            ");
+            $stmt = $pdo->query("SELECT e.*, 0 as reg_count, 0 as user_registered_id FROM events e ORDER BY e.event_date DESC");
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+    } catch (Exception $e) {}
+}
+
+if (empty($events)) {
     $events = [
-        ['id' => 1, 'title' => 'Blood Donation Camp 2026', 'event_date' => date('Y-m-d H:i:s', strtotime('+10 days')), 'location' => 'College Premises, Madurai-11', 'category' => 'Health', 'description' => 'Annual blood donation camp organized by NSS Unit, TNGPTC Madurai. All students and faculty are welcome.', 'status' => 'upcoming', 'user_registered_id' => 0],
-        ['id' => 2, 'title' => 'Tree Plantation Drive', 'event_date' => date('Y-m-d H:i:s', strtotime('+18 days')), 'location' => 'College Campus', 'category' => 'Environment', 'description' => 'Planting 500 saplings in and around the campus as part of Green India Mission.', 'status' => 'upcoming', 'user_registered_id' => 0],
-        ['id' => 3, 'title' => 'Village Adoption Program', 'event_date' => date('Y-m-d H:i:s', strtotime('+30 days')), 'location' => 'Alanganallur Village', 'category' => 'Community', 'description' => 'Community development, health awareness, and literacy programs in adopted village.', 'status' => 'upcoming', 'user_registered_id' => 0],
-        ['id' => 4, 'title' => 'Swachh Bharat Cleanliness Drive', 'event_date' => date('Y-m-d H:i:s', strtotime('-5 days')), 'location' => 'College & Surroundings', 'category' => 'Environment', 'description' => 'Campus and surrounding areas cleanliness drive held successfully with 120+ volunteers.', 'status' => 'completed', 'user_registered_id' => 0]
+        ['id' => 1, 'title' => 'Blood Donation Camp 2026', 'event_date' => date('Y-m-d H:i:s', strtotime('+30 days')), 'location' => 'College Premises, Madurai-11', 'category' => 'Health', 'description' => 'Annual blood donation camp organized by NSS Unit, TNGPTC Madurai. All students and faculty are welcome.', 'status' => 'upcoming', 'user_registered_id' => 0],
+        ['id' => 2, 'title' => 'Tree Plantation Drive', 'event_date' => date('Y-m-d H:i:s', strtotime('+45 days')), 'location' => 'College Campus', 'category' => 'Environment', 'description' => 'Planting 500 saplings in and around the campus as part of Green India Mission.', 'status' => 'upcoming', 'user_registered_id' => 0],
+        ['id' => 3, 'title' => 'Village Adoption Program', 'event_date' => date('Y-m-d H:i:s', strtotime('+60 days')), 'location' => 'Alanganallur Village', 'category' => 'Community', 'description' => 'Community development, health awareness, and literacy programs in adopted village.', 'status' => 'upcoming', 'user_registered_id' => 0]
     ];
 }
 ?>
@@ -163,5 +179,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 </script>
+
+<style>
+@media (max-width: 768px) {
+    .events-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+    .page-hero { padding: 80px 4% 30px !important; }
+    .page-hero .page-title { font-size: 2rem !important; }
+    .filters { gap: 8px !important; }
+    .filter-btn { font-size: 0.82rem; padding: 0.5rem 1rem; }
+}
+@media (max-width: 480px) {
+    .events-grid { gap: 16px !important; }
+    .page-hero .page-title { font-size: 1.65rem !important; }
+}
+</style>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

@@ -13,9 +13,9 @@ require_once 'includes/header.php';
             Password reset via email is not yet configured. Please contact the <strong>NSS Programme Officer</strong> to reset your account password.
         </p>
         <div class="glass-panel" style="padding: 1.2rem; border-radius: 10px; margin-bottom: 1.5rem; text-align: left;">
-            <p style="margin: 0.4rem 0;"><i data-lucide="mail" style="width:16px; height:16px; vertical-align: middle; margin-right: 8px; color: var(--accent);"></i> <strong>Email:</strong> tngptcmadurai@gmail.com</p>
+            <p style="margin: 0.4rem 0;"><i data-lucide="mail" style="width:16px; height:16px; vertical-align: middle; margin-right: 8px; color: var(--accent);"></i> <strong>Email:</strong> tnptc116@gmail.com</p>
             <p style="margin: 0.4rem 0;"><i data-lucide="phone" style="width:16px; height:16px; vertical-align: middle; margin-right: 8px; color: var(--accent);"></i> <strong>Phone:</strong> (0452) 2370461</p>
-            <p style="margin: 0.4rem 0;"><i data-lucide="map-pin" style="width:16px; height:16px; vertical-align: middle; margin-right: 8px; color: var(--accent);"></i> <strong>Office:</strong> TNGPTC, Bye-Pass Road, Madurai - 625011</p>
+            <p style="margin: 0.4rem 0;"><i data-lucide="map-pin" style="width:16px; height:16px; vertical-align: middle; margin-right: 8px; color: var(--accent);"></i> <strong>Office:</strong> TNGPTC, T.P.K Road, Madurai - 625011</p>
         </div>
         <a href="login.php" class="btn btn-primary" style="width: 100%; text-align: center; padding: 0.85rem;">
             <i data-lucide="arrow-left" style="width:16px; height:16px; vertical-align: middle; margin-right: 6px;"></i>

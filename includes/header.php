@@ -40,8 +40,9 @@ $root = $isDashboard ? '../' : '';
     <link rel="stylesheet" href="<?= $root ?>css/dashboard.css">
     <?php endif; ?>
     
-    <!-- FontAwesome & Lucide -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Anime.js & FontAwesome & Lucide -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <style>
@@ -181,23 +182,44 @@ $root = $isDashboard ? '../' : '';
             cursor: pointer;
         }
 
-        /* Loading Spinner */
+        /* Loading Spinner with Anime.js Spinning NSS Logo */
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffffff; z-index: 9999;
+            background: linear-gradient(135deg, #0d233a 0%, #1b365d 100%); z-index: 9999;
             display: flex; justify-content: center; align-items: center;
             transition: opacity 0.4s ease, visibility 0.4s ease;
         }
 
-        .spinner {
-            width: 44px; height: 44px;
-            border: 4px solid #e2e8f0;
-            border-radius: 50%;
-            border-top-color: var(--nss-blue);
-            animation: spin 0.8s linear infinite;
+        .loader-content {
+            text-align: center;
+            color: #ffffff;
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader-logo-wrap {
+            position: relative;
+            width: 95px; height: 95px;
+            margin: 0 auto 1.25rem;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border: 2px solid rgba(244, 161, 29, 0.4);
+            box-shadow: 0 0 30px rgba(244, 161, 29, 0.25);
+        }
+
+        .loader-logo-wrap img {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .loader-ring {
+            position: absolute;
+            inset: -4px;
+            border: 3px solid transparent;
+            border-top-color: #f4a11d;
+            border-bottom-color: #f4a11d;
+            border-radius: 50%;
+        }
 
         /* Responsive Nav */
         @media (max-width: 900px) {
@@ -224,12 +246,61 @@ $root = $isDashboard ? '../' : '';
 </head>
 <body>
     <?php if (!$isDashboard): ?>
-    <div id="loader"><div class="spinner"></div></div>
+    <div id="loader">
+        <div class="loader-content">
+            <div class="loader-logo-wrap">
+                <img src="<?= $root ?>assets/images/nss-logo.png" id="nssLoaderLogo" alt="NSS Logo">
+                <div class="loader-ring" id="nssLoaderRing"></div>
+            </div>
+            <div style="font-family:'Outfit',sans-serif; font-weight:800; color:#ffffff; font-size:1.15rem; letter-spacing:0.5px;">National Service Scheme</div>
+            <div style="color:#f4a11d; font-weight:700; font-size:0.85rem; letter-spacing:1px; margin-top:3px;">TNGPTC MADURAI-11 • NOT ME, BUT YOU</div>
+        </div>
+    </div>
     <script>
-        setTimeout(function() {
-            var l = document.getElementById('loader');
-            if (l) { l.style.opacity = '0'; setTimeout(function(){ l.style.display = 'none'; }, 300); }
-        }, 500);
+        (function() {
+            if (typeof anime !== 'undefined') {
+                anime({
+                    targets: '#nssLoaderLogo',
+                    rotate: '1turn',
+                    duration: 3000,
+                    easing: 'linear',
+                    loop: true
+                });
+                anime({
+                    targets: '#nssLoaderRing',
+                    rotate: '-1turn',
+                    scale: [1, 1.08, 1],
+                    duration: 1500,
+                    easing: 'easeInOutSine',
+                    loop: true
+                });
+            }
+            window.addEventListener('load', function() {
+                var l = document.getElementById('loader');
+                if (l) {
+                    if (typeof anime !== 'undefined') {
+                        anime({
+                            targets: l,
+                            opacity: [1, 0],
+                            duration: 400,
+                            easing: 'easeOutQuad',
+                            complete: function() { l.style.display = 'none'; }
+                        });
+                    } else {
+                        l.style.opacity = '0';
+                        setTimeout(function(){ l.style.display = 'none'; }, 400);
+                    }
+                }
+            });
+            // Fallback timeout
+            setTimeout(function() {
+                var l = document.getElementById('loader');
+                if (l && l.style.display !== 'none') {
+                    l.style.opacity = '0';
+                    setTimeout(function(){ l.style.display = 'none'; }, 400);
+                }
+            }, 1200);
+        })();
     </script>
     <?php endif; ?>
     

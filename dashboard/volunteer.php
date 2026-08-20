@@ -14,6 +14,43 @@ $stmt = $pdo->prepare("SELECT u.*, v.* FROM users u JOIN volunteers v ON u.id = 
 $stmt->execute([$_SESSION['user_id']]);
 $profile = $stmt->fetch();
 
+// Profile photo upload handler
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_avatar'])) {
+    if (isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
+        $upload_dir = '../uploads/profiles/';
+        if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+
+        $file_ext = strtolower(pathinfo($_FILES['profile_photo']['name'], PATHINFO_EXTENSION));
+        $allowed  = ['jpg', 'jpeg', 'png', 'webp'];
+
+        if (in_array($file_ext, $allowed) && $_FILES['profile_photo']['size'] <= 5 * 1024 * 1024) {
+            $new_filename = 'avatar_' . $_SESSION['user_id'] . '_' . time() . '.' . $file_ext;
+            $dest_path    = $upload_dir . $new_filename;
+            $db_path      = 'uploads/profiles/' . $new_filename;
+
+            if (move_uploaded_file($_FILES['profile_photo']['tmp_name'], $dest_path)) {
+                $stmt = $pdo->prepare("UPDATE users SET profile_photo = ? WHERE id = ?");
+                $stmt->execute([$db_path, $_SESSION['user_id']]);
+                $_SESSION['user_data']['profile_photo'] = $db_path;
+                $msg = "Profile picture updated successfully!";
+
+                logUserActivity($pdo, $_SESSION['user_id'], $profile['name'], 'volunteer', 'Profile Photo Upload', "Uploaded new profile avatar picture");
+
+                // Refresh profile
+                $stmt = $pdo->prepare("SELECT u.*, v.* FROM users u JOIN volunteers v ON u.id = v.user_id WHERE u.id = ?");
+                $stmt->execute([$_SESSION['user_id']]);
+                $profile = $stmt->fetch();
+            } else {
+                $error = "Failed to save profile picture.";
+            }
+        } else {
+            $error = "Invalid format or file size over 5MB. Only JPG, PNG, WEBP allowed.";
+        }
+    } else {
+        $error = "Please select an image file to upload.";
+    }
+}
+
 // Profile update handler
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $mobile = trim($_POST['mobile'] ?? '');
@@ -26,6 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         $stmt = $pdo->prepare("UPDATE volunteers SET mobile = ?, blood_group = ?, year = ? WHERE user_id = ?");
         $stmt->execute([$mobile, $blood_group, $year, $_SESSION['user_id']]);
         $msg = "Profile updated successfully!";
+
+        logUserActivity($pdo, $_SESSION['user_id'], $profile['name'], 'volunteer', 'Profile Update', "Updated contact details: Mobile={$mobile}, Blood Group={$blood_group}, Year={$year}");
+
         // Refresh profile
         $stmt = $pdo->prepare("SELECT u.*, v.* FROM users u JOIN volunteers v ON u.id = v.user_id WHERE u.id = ?");
         $stmt->execute([$_SESSION['user_id']]);
@@ -161,7 +201,30 @@ require_once '../includes/header.php';
         <div class="dashboard-grid">
             <!-- Profile Card & Edit Form (Department Locked) -->
             <div class="dashboard-card glass-panel" id="profileCard" style="grid-column: span 6;">
-                <h3><i class="fas fa-user-edit text-primary"></i> My Volunteer Profile & Edit</h3>
+                <h3><i class="fas fa-user-edit text-primary"></i> My Volunteer Profile & Photo</h3>
+                
+                <!-- Avatar Upload Badge -->
+                <div style="text-align:center; margin-bottom:1.5rem; padding-bottom:1.25rem; border-bottom:1px solid #e2e8f0;">
+                    <div style="position:relative; width:105px; height:105px; margin:0 auto 10px;">
+                        <?php if (!empty($profile['profile_photo'])): ?>
+                            <img src="../<?= htmlspecialchars($profile['profile_photo']) ?>" alt="Avatar" style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:3px solid #f4a11d; box-shadow:0 4px 15px rgba(0,0,0,0.15);">
+                        <?php else: ?>
+                            <div style="width:100%; height:100%; border-radius:50%; background:linear-gradient(135deg,#1b365d 0%,#0d233a 100%); color:#f4a11d; display:flex; align-items:center; justify-content:center; font-size:2.5rem; font-weight:800; border:3px solid #f4a11d;">
+                                <?= strtoupper(substr($profile['name'] ?? 'V', 0, 1)) ?>
+                            </div>
+                        <?php endif; ?>
+                        <label for="profilePhotoInput" style="position:absolute; bottom:0; right:0; background:#f4a11d; color:#0d233a; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white;" title="Upload / Change Profile Picture">
+                            <i class="fas fa-camera" style="font-size:0.9rem;"></i>
+                        </label>
+                    </div>
+                    
+                    <form method="POST" enctype="multipart/form-data" id="avatarForm" style="display:inline-block;">
+                        <input type="hidden" name="upload_avatar" value="1">
+                        <input type="file" name="profile_photo" id="profilePhotoInput" accept="image/*" style="display:none;" onchange="document.getElementById('avatarForm').submit();">
+                    </form>
+                    <small class="text-muted d-block">Click camera icon to upload profile picture (Max 5MB)</small>
+                </div>
+
                 <form method="POST" action="volunteer.php">
                     <input type="hidden" name="update_profile" value="1">
                     <div class="form-group mb-3">

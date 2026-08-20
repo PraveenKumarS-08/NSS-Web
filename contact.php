@@ -37,8 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if ($error): ?>
         <div class="alert alert-error" style="margin-bottom:30px;"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
+    <style>
+        .contact-layout { display:grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items:start; }
+        @media (max-width: 768px) {
+            .contact-layout { grid-template-columns: 1fr; gap: 24px; }
+            .page-hero { padding: 80px 4% 30px !important; }
+            .page-hero .page-title { font-size: 2rem !important; }
+        }
+        @media (max-width: 480px) {
+            .contact-layout .glass-panel { padding: 1.5rem !important; }
+        }
+    </style>
 
-    <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items:start;">
+    <div class="contact-layout">
         <!-- Left: Contact Form -->
         <div class="glass-panel" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:2.5rem; box-shadow:0 10px 30px rgba(0,0,0,0.04);" data-aos="fade-right">
             <h2 style="color:#1b365d; font-family:'Outfit',sans-serif; margin-bottom:0.5rem; font-size:1.8rem;">Send Us a Message</h2>
@@ -81,8 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div>
                         <strong style="color:#0f172a; display:block;">Institution Campus:</strong>
-                        <span style="color:#475569; font-size:0.92rem; line-height:1.5;">Tamil Nadu Government Polytechnic College,<br>Bye-Pass Road, Madurai - 625011, Tamil Nadu.</span>
-                        <a href="https://maps.app.goo.gl/4MPY8FHAcP7gcyeFA" target="_blank" style="display:inline-block; margin-top:4px; color:#f4a11d; font-weight:600; font-size:0.85rem;"><i class="fas fa-external-link-alt"></i> View on Google Maps</a>
+                        <span style="color:#475569; font-size:0.92rem; line-height:1.5;">Tamil Nadu Government Polytechnic College,<br>T.P.K Road, Madurai - 625011, Tamil Nadu.</span>
+                        <a href="https://maps.google.com/?q=Tamilnadu+Government+Polytechnic+College+Madurai" target="_blank" style="display:inline-block; margin-top:4px; color:#f4a11d; font-weight:600; font-size:0.85rem;"><i class="fas fa-external-link-alt"></i> View on Google Maps</a>
                     </div>
                 </div>
 
@@ -102,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div>
                         <strong style="color:#0f172a; display:block;">Email Addresses:</strong>
-                        <span style="color:#475569; font-size:0.92rem;">tngptcmadurai@gmail.com</span>
+                        <span style="color:#475569; font-size:0.92rem;">tnptc116@gmail.com</span>
                     </div>
                 </div>
 
@@ -119,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Map Embed Card -->
             <div class="glass-panel" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.04);">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3930.138883652877!2d78.0965!3d9.9238!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b00c58e0a35dbfd%3A0x6b726617a7e28b80!2sTamil%20Nadu%20Government%20Polytechnic%20College!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" width="100%" height="240" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3930.2966200077535!2d78.1095477!3d9.909235100000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b00c57e090553ed%3A0xe3613e7505015ddd!2sTamilnadu%20Government%20Polytechnic%20College%2C%20Madurai.!5e0!3m2!1sen!2sin!4v1786948790907!5m2!1sen!2sin" width="100%" height="280" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
             </div>
         </div>
     </div>

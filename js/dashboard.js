@@ -64,66 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ==========================================================================
        4. Chart.js Initializations
        ========================================================================== */
-    
-    // Global Chart Settings for Dark Theme
     if (typeof Chart !== 'undefined') {
-        Chart.defaults.color = '#7aaa8a';
-        Chart.defaults.borderColor = 'rgba(26, 107, 60, 0.2)';
+        // Global Chart Defaults
+        Chart.defaults.color = '#475569';
+        Chart.defaults.borderColor = 'rgba(27, 54, 93, 0.1)';
         Chart.defaults.font.family = "'Inter', sans-serif";
-
-        // A. Volunteer by Department (Bar Chart)
-        const deptChartCtx = document.getElementById('deptChart');
-        if (deptChartCtx) {
-            new Chart(deptChartCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Civil', 'Mech', 'EEE', 'Comp Eng', 'Robotics', 'Web Des'],
-                    datasets: [{
-                        label: 'Volunteers',
-                        data: [45, 60, 35, 50, 20, 15],
-                        backgroundColor: '#1a6b3c',
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y', // Horizontal bar
-                    plugins: {
-                        legend: { display: false }
-                    }
-                }
-            });
-        }
-
-        // B. Events by Category (Doughnut Chart)
-        const categoryChartCtx = document.getElementById('categoryChart');
-        if (categoryChartCtx) {
-            new Chart(categoryChartCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Camp', 'Awareness', 'Cleaning', 'Plantation'],
-                    datasets: [{
-                        data: [12, 19, 8, 15],
-                        backgroundColor: [
-                            '#f4a11d', // Accent Gold
-                            '#1a6b3c', // Primary Green
-                            '#2a8a4e', // Light Green
-                            '#0d3d22'  // Dark Green
-                        ],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    }
-                }
-            });
-        }
 
         // C. Monthly Activity (Line Chart)
         const activityChartCtx = document.getElementById('activityChart');
