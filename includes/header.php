@@ -23,7 +23,55 @@ $root = $isDashboard ? '../' : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle) ?></title>
-    <meta name="description" content="National Service Scheme Unit of Tamil Nadu Government Polytechnic College, Madurai-11. Not Me, But You.">
+    <meta name="description" content="National Service Scheme Unit of Tamil Nadu Government Polytechnic College, Madurai-11. Not Me, But You. Community service, youth leadership, and civic responsibility.">
+    
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/png" href="<?= $root ?>assets/images/nss-logo.png">
+    <link rel="apple-touch-icon" href="<?= $root ?>assets/images/nss-logo.png">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="<?= (defined('BASE_URL') ? BASE_URL : 'http://tngptcmadurai.com/nss') . '/' . ($currentPage === 'index.php' ? '' : $currentPage) ?>">
+
+    <!-- Open Graph (OG) Meta Tags for Social Sharing -->
+    <meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?>">
+    <meta property="og:description" content="Official NSS Unit Portal of Tamil Nadu Government Polytechnic College, Madurai-11. Not Me, But You.">
+    <meta property="og:image" content="<?= (defined('BASE_URL') ? BASE_URL : 'http://tngptcmadurai.com/nss') ?>/assets/images/nss-logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="NSS Unit - TNGPTC Madurai">
+    <meta property="og:url" content="<?= (defined('BASE_URL') ? BASE_URL : 'http://tngptcmadurai.com/nss') . '/' . ($currentPage === 'index.php' ? '' : $currentPage) ?>">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= htmlspecialchars($pageTitle) ?>">
+    <meta name="twitter:description" content="Official NSS Unit Portal of Tamil Nadu Government Polytechnic College, Madurai-11. Not Me, But You.">
+    <meta name="twitter:image" content="<?= (defined('BASE_URL') ? BASE_URL : 'http://tngptcmadurai.com/nss') ?>/assets/images/nss-logo.png">
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "National Service Scheme Unit - TNGPTC Madurai-11",
+      "alternateName": "TNGPTC NSS Unit",
+      "url": "http://tngptcmadurai.com/nss",
+      "logo": "http://tngptcmadurai.com/nss/assets/images/nss-logo.png",
+      "description": "National Service Scheme unit empowering polytechnic youth through social service, health drives, community development, and leadership in Madurai, Tamil Nadu.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "T.P.K Road",
+        "addressLocality": "Madurai",
+        "addressRegion": "Tamil Nadu",
+        "postalCode": "625011",
+        "addressCountry": "IN"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-452-2370461",
+        "contactType": "NSS Office",
+        "email": "tnptc116@gmail.com"
+      }
+    }
+    </script>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -103,12 +151,13 @@ $root = $isDashboard ? '../' : '';
             color: #0f172a;
         }
 
-        .brand-text h1 { 
+        .brand-text .brand-title { 
             margin: 0; 
             font-size: 1.15rem; 
             color: var(--nss-blue); 
             font-weight: 800; 
             line-height: 1.2;
+            font-family: 'Outfit', sans-serif;
         }
 
         .brand-text p { 
