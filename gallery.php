@@ -20,25 +20,11 @@ try {
 
 // Categories for filtering
 $categories = ['All', 'Parade', 'Health', 'Environment', 'Camps', 'Community', 'Cultural'];
-
-if (empty($groupedByYear)) {
-    // Default sample grouping
-    $groupedByYear[2026] = [
-        ['title' => 'Annual Parade Drill 2026', 'category' => 'Parade', 'image_path' => 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop&q=60'],
-        ['title' => 'Blood Donation Camp 2026', 'category' => 'Health', 'image_path' => 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=600&auto=format&fit=crop&q=60'],
-        ['title' => 'Green India Tree Plantation', 'category' => 'Environment', 'image_path' => 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format&fit=crop&q=60']
-    ];
-    $groupedByYear[2025] = [
-        ['title' => 'Swachh Bharat Cleanliness Drive', 'category' => 'Environment', 'image_path' => 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600&auto=format&fit=crop&q=60'],
-        ['title' => 'Village Adoption Special Camp', 'category' => 'Camps', 'image_path' => 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&auto=format&fit=crop&q=60'],
-        ['title' => 'National Youth Day Rally', 'category' => 'Cultural', 'image_path' => 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&auto=format&fit=crop&q=60']
-    ];
-}
 ?>
 
-<div class="page-hero" style="padding: 90px 5% 40px; text-align: center; background: linear-gradient(135deg, #1b365d 0%, #0d233a 100%); border-bottom: 3px solid #f4a11d;">
-    <h1 class="page-title" style="font-size:2.8rem; color:white; margin-bottom: 0.5rem;">NSS Activity Photo Gallery</h1>
-    <p style="color:#f4a11d; font-size:1.1rem; font-weight:600;">Glimpses of Service, Leadership & Community Impact</p>
+<div class="page-hero">
+    <h1 class="page-title">NSS Activity Photo Gallery</h1>
+    <p>Glimpses of Service, Leadership & Community Impact</p>
 </div>
 
 <section class="section" style="padding: 50px 5%; max-width: 1400px; margin: 0 auto;">
@@ -48,55 +34,73 @@ if (empty($groupedByYear)) {
     </div>
     <?php endif; ?>
 
-    <!-- Filter Controls Bar: Category & Year -->
-    <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin-bottom:40px; flex-wrap:wrap;">
-        <div class="gallery-filters" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-            <?php foreach ($categories as $idx => $cat): ?>
-                <button type="button" class="filter-btn <?= $idx === 0 ? 'active' : '' ?>" data-filter="<?= strtolower($cat) ?>"><?= $cat ?></button>
-            <?php endforeach; ?>
-        </div>
-
-        <!-- Year Selector Dropdown -->
-        <div style="display:flex; align-items:center; gap:8px; background:#f0f2f5; padding:6px 16px; border-radius:30px; border:1px solid #cbd5e1;">
-            <i class="fas fa-calendar-alt text-primary"></i>
-            <span style="font-weight:700; font-size:0.88rem; color:#1b365d;">Year:</span>
-            <select id="yearFilterSelect" style="background:none; border:none; font-weight:700; color:#1b365d; cursor:pointer; font-size:0.9rem; outline:none;">
-                <option value="all">All Years</option>
-                <?php foreach (array_keys($groupedByYear) as $y): ?>
-                    <option value="<?= $y ?>"><?= $y ?> Academic Year</option>
+    <?php if (!empty($groupedByYear)): ?>
+        <!-- Filter Controls Bar: Category & Year -->
+        <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin-bottom:40px; flex-wrap:wrap;">
+            <div class="gallery-filters" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+                <?php foreach ($categories as $idx => $cat): ?>
+                    <button type="button" class="filter-btn <?= $idx === 0 ? 'active' : '' ?>" data-filter="<?= strtolower($cat) ?>"><?= $cat ?></button>
                 <?php endforeach; ?>
-            </select>
-        </div>
-    </div>
+            </div>
 
-    <!-- Gallery Grouped By Year Sections -->
-    <?php foreach ($groupedByYear as $year => $photos): ?>
-    <div class="year-section mb-5" data-year="<?= $year ?>">
-        <div style="display:flex; align-items:center; gap:15px; margin-bottom:24px;">
-            <h2 style="font-family:'Outfit',sans-serif; color:#1b365d; margin:0; font-size:2rem; font-weight:800;">
-                <i class="fas fa-calendar-alt text-accent"></i> <?= $year ?> Activities
-            </h2>
-            <div style="flex:1; height:2px; background:linear-gradient(90deg, #f4a11d 0%, #e2e8f0 100%);"></div>
+            <!-- Year Selector Dropdown -->
+            <div style="display:flex; align-items:center; gap:8px; background:var(--bg); padding:6px 16px; border-radius:30px; border:1px solid var(--border);">
+                <i class="fas fa-calendar-alt text-primary"></i>
+                <span style="font-weight:700; font-size:0.88rem; color:var(--primary);">Year:</span>
+                <select id="yearFilterSelect" style="background:none; border:none; font-weight:700; color:var(--primary); cursor:pointer; font-size:0.9rem; outline:none;">
+                    <option value="all">All Years</option>
+                    <?php foreach (array_keys($groupedByYear) as $y): ?>
+                        <option value="<?= $y ?>"><?= $y ?> Academic Year</option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
         </div>
 
-        <div class="gallery-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
-            <?php foreach ($photos as $img): 
-                $path = $img['image_path'] ?? $img['image'] ?? '';
-                if (!empty($path) && strpos($path, 'uploads/') !== 0 && strpos($path, 'http') !== 0) {
-                    $path = 'uploads/gallery/' . $path;
-                }
-            ?>
-                <div class="gallery-item" data-category="<?= strtolower($img['category'] ?? 'all') ?>" data-year="<?= $year ?>" data-aos="zoom-in" onclick="openLightbox('<?= htmlspecialchars($path) ?>', '<?= htmlspecialchars($img['title'] ?? '') ?>')">
-                    <img src="<?= htmlspecialchars($path) ?>" alt="<?= htmlspecialchars($img['title'] ?? 'NSS Photo') ?>" style="width:100%; height:250px; object-fit:cover; border-radius:12px;">
-                    <div class="gallery-overlay">
-                        <h3 class="gallery-title" style="color:white; margin:0; font-size:1.1rem;"><?= htmlspecialchars($img['title'] ?? 'NSS Activity') ?></h3>
-                        <span class="gallery-cat" style="color:#f4a11d; font-size:0.85rem; font-weight:600;"><?= htmlspecialchars($img['category'] ?? 'General') ?></span>
+        <!-- Gallery Grouped By Year Sections -->
+        <?php foreach ($groupedByYear as $year => $photos): ?>
+        <div class="year-section mb-5" data-year="<?= $year ?>">
+            <div style="display:flex; align-items:center; gap:15px; margin-bottom:24px;">
+                <h2 style="font-family:'Outfit',sans-serif; color:var(--primary); margin:0; font-size:2rem; font-weight:800;">
+                    <i class="fas fa-calendar-alt text-accent"></i> <?= $year ?> Activities
+                </h2>
+                <div style="flex:1; height:2px; background:linear-gradient(90deg, var(--accent) 0%, var(--border) 100%);"></div>
+            </div>
+
+            <div class="gallery-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+                <?php foreach ($photos as $img): 
+                    $path = $img['image_path'] ?? $img['image'] ?? '';
+                    if (!empty($path) && strpos($path, 'uploads/') !== 0 && strpos($path, 'http') !== 0) {
+                        $path = 'uploads/gallery/' . $path;
+                    }
+                ?>
+                    <div class="gallery-item" data-category="<?= strtolower($img['category'] ?? 'all') ?>" data-year="<?= $year ?>" data-aos="zoom-in" onclick="openLightbox('<?= htmlspecialchars($path) ?>', '<?= htmlspecialchars($img['title'] ?? '') ?>')">
+                        <img src="<?= htmlspecialchars($path) ?>" alt="<?= htmlspecialchars($img['title'] ?? 'NSS Photo') ?>" style="width:100%; height:250px; object-fit:cover; border-radius:12px;">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title" style="color:white; margin:0; font-size:1.1rem;"><?= htmlspecialchars($img['title'] ?? 'NSS Activity') ?></h3>
+                            <span class="gallery-cat" style="color:var(--accent); font-size:0.85rem; font-weight:600;"><?= htmlspecialchars($img['category'] ?? 'General') ?></span>
+                        </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
-    </div>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <!-- Clean Empty State when no photos exist -->
+        <div style="text-align:center; padding:5rem 1rem; background:#fff; border-radius:20px; border:1px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.04); max-width:650px; margin:20px auto;" data-aos="fade-up">
+            <div style="width:85px; height:85px; border-radius:50%; background:var(--primary-subtle); color:var(--primary); display:inline-flex; align-items:center; justify-content:center; font-size:2.4rem; margin-bottom:1.25rem;">
+                <i class="fas fa-images"></i>
+            </div>
+            <h2 style="color:var(--primary); font-family:'Outfit',sans-serif; margin-bottom:0.6rem; font-size:1.8rem; font-weight:700;">No Activity Photos Uploaded Yet</h2>
+            <p style="color:var(--text-muted); font-size:1rem; line-height:1.7; margin:0 0 1.75rem;">
+                High-resolution glimpses from our upcoming blood donation camps, tree plantation drives, special camps, and cultural events will be displayed here.
+            </p>
+            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                <a href="dashboard/admin-gallery.php" class="btn btn-primary" style="padding:0.8rem 1.8rem; border-radius:12px; font-weight:700;">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload First Photos
+                </a>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
 </section>
 
 <!-- Lightbox Modal -->

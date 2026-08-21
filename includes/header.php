@@ -24,7 +24,7 @@ $root = $isDashboard ? '../' : '';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle) ?></title>
     <meta name="description" content="National Service Scheme Unit of Tamil Nadu Government Polytechnic College, Madurai-11. Not Me, But You. Community service, youth leadership, and civic responsibility.">
-    
+
     <!-- Favicon & Touch Icons -->
     <link rel="icon" type="image/png" href="<?= $root ?>assets/images/nss-logo.png">
     <link rel="apple-touch-icon" href="<?= $root ?>assets/images/nss-logo.png">
@@ -95,15 +95,6 @@ $root = $isDashboard ? '../' : '';
     
     <style>
         :root {
-            --nss-blue: #1b365d;
-            --nss-navy: #0d233a;
-            --nss-red: #b71c1c;
-            --nss-gold: #f4a11d;
-            --nss-gold-dark: #d98200;
-            --primary: #1b365d;
-            --primary-dark: #0d233a;
-            --accent: #f4a11d;
-            --light-bg: #f8fafc;
             --glass-bg: rgba(255, 255, 255, 0.96);
             --glass-border: rgba(226, 232, 240, 0.9);
         }

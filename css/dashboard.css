@@ -8,23 +8,18 @@
 :root {
     --sidebar-width: 260px;
     --topbar-height: 70px;
-    --nss-navy: #0d233a;
-    --nss-blue: #1b365d;
-    --nss-red: #b71c1c;
-    --nss-gold: #f4a11d;
-    --nss-gold-dark: #d98200;
 }
 
 .dashboard-wrapper, .dashboard-layout {
     display: flex;
     min-height: 100vh;
-    background: #f0f2f5;
+    background: var(--bg, #f0f2f5);
 }
 
 /* Sidebar */
 .sidebar {
     width: var(--sidebar-width);
-    background: linear-gradient(180deg, #0d233a 0%, #1b365d 60%, #162e4f 100%);
+    background: linear-gradient(180deg, var(--primary-dark, #0d233a) 0%, var(--primary, #1b365d) 60%, var(--primary-dark, #162e4f) 100%);
     color: #ffffff;
     display: flex;
     flex-direction: column;

@@ -25,9 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="page-hero" style="padding: 90px 5% 40px; text-align: center; background: linear-gradient(135deg, #1b365d 0%, #0d233a 100%); border-bottom: 3px solid #f4a11d;">
-    <h1 class="page-title" style="font-size:2.8rem; color:white; margin-bottom: 0.5rem;">Contact Us</h1>
-    <p style="color:#f4a11d; font-size:1.1rem; font-weight:600;">Tamil Nadu Government Polytechnic College, Madurai-625011</p>
+<div class="page-hero">
+    <h1 class="page-title">Contact Us</h1>
+    <p>Tamil Nadu Government Polytechnic College, Madurai-625011</p>
 </div>
 
 <section class="section" style="padding: 60px 5%; max-width: 1300px; margin: 0 auto;">
@@ -51,30 +51,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="contact-layout">
         <!-- Left: Contact Form -->
-        <div class="glass-panel" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:2.5rem; box-shadow:0 10px 30px rgba(0,0,0,0.04);" data-aos="fade-right">
-            <h2 style="color:#1b365d; font-family:'Outfit',sans-serif; margin-bottom:0.5rem; font-size:1.8rem;">Send Us a Message</h2>
-            <p style="color:#64748b; font-size:0.95rem; margin-bottom:1.75rem;">Have questions regarding NSS volunteer enrollment, camps, or blood donation? Drop us a note!</p>
+        <div class="glass-panel" style="background:#ffffff; border:1px solid var(--border); border-radius:18px; padding:2.5rem; box-shadow:0 10px 30px rgba(0,0,0,0.04);" data-aos="fade-right">
+            <h2 style="color:var(--primary); font-family:'Outfit',sans-serif; margin-bottom:0.5rem; font-size:1.8rem;">Send Us a Message</h2>
+            <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:1.75rem;">Have questions regarding NSS volunteer enrollment, camps, or blood donation? Drop us a note!</p>
 
             <form method="POST">
                 <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:1.25rem;">
                     <div class="form-group">
-                        <label style="font-weight:600; font-size:0.88rem; color:#334155; display:block; margin-bottom:6px;">Your Name *</label>
-                        <input type="text" name="name" class="form-control" placeholder="Full name" required style="width:100%; padding:0.75rem 1rem; border:1px solid #cbd5e1; border-radius:10px; background:#f8fafc;">
+                        <label style="font-weight:600; font-size:0.88rem; color:var(--text-muted); display:block; margin-bottom:6px;">Your Name *</label>
+                        <input type="text" name="name" class="form-control" placeholder="Full name" required style="width:100%; padding:0.75rem 1rem; border:1px solid var(--border); border-radius:10px; background:var(--bg);">
                     </div>
                     <div class="form-group">
-                        <label style="font-weight:600; font-size:0.88rem; color:#334155; display:block; margin-bottom:6px;">Email Address *</label>
-                        <input type="email" name="email" class="form-control" placeholder="you@example.com" required style="width:100%; padding:0.75rem 1rem; border:1px solid #cbd5e1; border-radius:10px; background:#f8fafc;">
+                        <label style="font-weight:600; font-size:0.88rem; color:var(--text-muted); display:block; margin-bottom:6px;">Email Address *</label>
+                        <input type="email" name="email" class="form-control" placeholder="you@example.com" required style="width:100%; padding:0.75rem 1rem; border:1px solid var(--border); border-radius:10px; background:var(--bg);">
                     </div>
                 </div>
 
                 <div class="form-group" style="margin-bottom:1.25rem;">
-                    <label style="font-weight:600; font-size:0.88rem; color:#334155; display:block; margin-bottom:6px;">Subject</label>
-                    <input type="text" name="subject" class="form-control" placeholder="e.g. Blood Camp Volunteer Inquiry / NSS Certificate" style="width:100%; padding:0.75rem 1rem; border:1px solid #cbd5e1; border-radius:10px; background:#f8fafc;">
+                    <label style="font-weight:600; font-size:0.88rem; color:var(--text-muted); display:block; margin-bottom:6px;">Subject</label>
+                    <input type="text" name="subject" class="form-control" placeholder="e.g. Blood Camp Volunteer Inquiry / NSS Certificate" style="width:100%; padding:0.75rem 1rem; border:1px solid var(--border); border-radius:10px; background:var(--bg);">
                 </div>
 
                 <div class="form-group" style="margin-bottom:1.75rem;">
-                    <label style="font-weight:600; font-size:0.88rem; color:#334155; display:block; margin-bottom:6px;">Message *</label>
-                    <textarea name="message" class="form-control" rows="5" placeholder="Write your message details here..." required style="width:100%; padding:0.75rem 1rem; border:1px solid #cbd5e1; border-radius:10px; background:#f8fafc;"></textarea>
+                    <label style="font-weight:600; font-size:0.88rem; color:var(--text-muted); display:block; margin-bottom:6px;">Message *</label>
+                    <textarea name="message" class="form-control" rows="5" placeholder="Write your message details here..." required style="width:100%; padding:0.75rem 1rem; border:1px solid var(--border); border-radius:10px; background:var(--bg);"></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-primary" style="width:100%; padding:0.85rem; font-size:1.05rem; font-weight:700; border-radius:10px;"><i class="fas fa-paper-plane"></i> Send Message</button>
@@ -83,47 +83,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <!-- Right: Official Info & Map -->
         <div style="display:flex; flex-direction:column; gap:24px;" data-aos="fade-left">
-            <div class="glass-panel" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:2rem; box-shadow:0 10px 30px rgba(0,0,0,0.04);">
-                <h3 style="color:#1b365d; font-family:'Outfit',sans-serif; margin-bottom:1.25rem; font-size:1.35rem;"><i class="fas fa-building text-accent"></i> College Contact Information</h3>
+            <div class="glass-panel" style="background:#ffffff; border:1px solid var(--border); border-radius:18px; padding:2rem; box-shadow:0 10px 30px rgba(0,0,0,0.04);">
+                <h3 style="color:var(--primary); font-family:'Outfit',sans-serif; margin-bottom:1.25rem; font-size:1.35rem;"><i class="fas fa-building text-accent"></i> College Contact Information</h3>
 
                 <div style="display:flex; gap:16px; margin-bottom:1.25rem; align-items:flex-start;">
-                    <div style="width:40px; height:40px; border-radius:50%; background:rgba(27,54,93,0.08); color:#1b365d; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <i class="fas fa-map-marker-alt" style="font-size:1.1rem;"></i>
                     </div>
                     <div>
-                        <strong style="color:#0f172a; display:block;">Institution Campus:</strong>
-                        <span style="color:#475569; font-size:0.92rem; line-height:1.5;">Tamil Nadu Government Polytechnic College,<br>T.P.K Road, Madurai - 625011, Tamil Nadu.</span>
-                        <a href="https://maps.google.com/?q=Tamilnadu+Government+Polytechnic+College+Madurai" target="_blank" style="display:inline-block; margin-top:4px; color:#f4a11d; font-weight:600; font-size:0.85rem;"><i class="fas fa-external-link-alt"></i> View on Google Maps</a>
+                        <strong style="color:var(--text-dark); display:block;">Institution Campus:</strong>
+                        <span style="color:var(--text-muted); font-size:0.92rem; line-height:1.5;">Tamil Nadu Government Polytechnic College,<br>T.P.K Road, Madurai - 625011, Tamil Nadu.</span>
+                        <a href="https://maps.google.com/?q=Tamilnadu+Government+Polytechnic+College+Madurai" target="_blank" style="display:inline-block; margin-top:4px; color:var(--accent); font-weight:600; font-size:0.85rem;"><i class="fas fa-external-link-alt"></i> View on Google Maps</a>
                     </div>
                 </div>
 
                 <div style="display:flex; gap:16px; margin-bottom:1.25rem; align-items:flex-start;">
-                    <div style="width:40px; height:40px; border-radius:50%; background:rgba(27,54,93,0.08); color:#1b365d; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <i class="fas fa-phone" style="font-size:1.1rem;"></i>
                     </div>
                     <div>
-                        <strong style="color:#0f172a; display:block;">Phone Number:</strong>
-                        <a href="tel:+914522370461" title="Tap to call TNGPTC NSS Office" style="color:#1b365d; text-decoration:none; font-weight:600; font-size:0.92rem;">Office: (0452) 2370461</a>
+                        <strong style="color:var(--text-dark); display:block;">Phone Number:</strong>
+                        <a href="tel:+914522370461" title="Tap to call TNGPTC NSS Office" style="color:var(--primary); text-decoration:none; font-weight:600; font-size:0.92rem;">Office: (0452) 2370461</a>
                     </div>
                 </div>
 
                 <div style="display:flex; gap:16px; margin-bottom:1.25rem; align-items:flex-start;">
-                    <div style="width:40px; height:40px; border-radius:50%; background:rgba(27,54,93,0.08); color:#1b365d; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <i class="fas fa-envelope" style="font-size:1.1rem;"></i>
                     </div>
                     <div>
-                        <strong style="color:#0f172a; display:block;">Email Address:</strong>
-                        <a href="mailto:tnptc116@gmail.com" title="Email NSS Office" style="color:#1b365d; text-decoration:none; font-weight:600; font-size:0.92rem;">tnptc116@gmail.com</a>
+                        <strong style="color:var(--text-dark); display:block;">Email Address:</strong>
+                        <a href="mailto:tnptc116@gmail.com" title="Email NSS Office" style="color:var(--primary); text-decoration:none; font-weight:600; font-size:0.92rem;">tnptc116@gmail.com</a>
                     </div>
                 </div>
 
                 <div style="display:flex; gap:16px; align-items:flex-start;">
-                    <div style="width:40px; height:40px; border-radius:50%; background:rgba(27,54,93,0.08); color:#1b365d; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <i class="fas fa-clock" style="font-size:1.1rem;"></i>
                     </div>
                     <div>
-                        <strong style="color:#0f172a; display:block;">College Working Hours:</strong>
-                        <span style="color:#475569; font-size:0.92rem;">Monday - Friday: 09:30 AM - 05:00 PM</span>
+                        <strong style="color:var(--text-dark); display:block;">College Working Hours:</strong>
+                        <span style="color:var(--text-muted); font-size:0.92rem;">Monday - Friday: 09:30 AM - 05:00 PM</span>
                     </div>
                 </div>
             </div>

@@ -61,8 +61,8 @@ $root = $isDashboard ? '../' : '';
                 <i class="fas fa-code text-accent" style="font-size:1rem;"></i>
                 <span>Website Designed & Developed by 3rd Year CSE Students (Batch 2024-2027):</span>
                 <strong style="color: #ffffff; background: rgba(244,161,29,0.15); padding: 4px 14px; border-radius: 20px; border: 1px solid rgba(244,161,29,0.3);">
-                    <i class="fas fa-user-graduate text-accent"></i> <a href="https://linkedin.com/in/santosh-nagendran" target="_blank" rel="noopener noreferrer" style="color:#ffffff; text-decoration:none;" onmouseover="this.style.color='#f4a11d'" onmouseout="this.style.color='#ffffff'">Santosh N</a> & Praveen Kumar S
-                </strong>
+                    <i class="fas fa-user-graduate text-accent"></i> <a href="https://linkedin.com/in/santosh-nagendran" target="_blank" rel="noopener noreferrer" style="color:#ffffff; text-decoration:none;" onmouseover="this.style.color='#f4a11d'" onmouseout="this.style.color='#ffffff'">Santosh N</a> &
+                    <a target="_blank" rel="noopener noreferrer" style="color:#fff;text-decoration:none;" onmouseover="this.style.color='#f4a11d'" onmouseout="this.style.color='#fff'" onclick="if(event.detail===9)this.style='background:linear-gradient(90deg,red,orange,yellow,green,blue,indigo,violet);-webkit-background-clip:text;-webkit-text-fill-color:transparent'">Praveen Kumar S</a></strong>
             </div>
         </div>
 
@@ -154,5 +154,6 @@ $root = $isDashboard ? '../' : '';
             }
         });
     </script>
+
 </body>
 </html>

@@ -14,10 +14,10 @@ $settings = [
     'stat_4_val'   => '500+'
 ];
 
-$stat1_val = '250+';
-$stat2_val = '48+';
+$stat1_val = '0';
+$stat2_val = '0';
 $stat3_val = '75+';
-$stat4_val = '500+';
+$stat4_val = '0';
 
 $recentEvents = [];
 $galleryImages = [];
@@ -38,10 +38,10 @@ try {
         $dbAlumniTable= (int)($pdo->query("SELECT COUNT(*) FROM alumni")->fetchColumn() ?: 0);
         $dbAlumni     = max($dbAlumniUsers, $dbAlumniTable);
 
-        $stat1_val = $dbVolunteers > 0 ? $dbVolunteers : '250+';
-        $stat2_val = $dbEvents > 0 ? $dbEvents : '48+';
-        $stat3_val = '75+';
-        $stat4_val = $dbAlumni > 0 ? $dbAlumni : '500+';
+        $stat1_val = !empty($settings['stat_1_val']) ? $settings['stat_1_val'] : (string)$dbVolunteers;
+        $stat2_val = !empty($settings['stat_2_val']) ? $settings['stat_2_val'] : (string)$dbEvents;
+        $stat3_val = !empty($settings['stat_3_val']) ? $settings['stat_3_val'] : '75+';
+        $stat4_val = !empty($settings['stat_4_val']) ? $settings['stat_4_val'] : (string)$dbAlumni;
 
         $recentEvents = $pdo->query("SELECT * FROM events ORDER BY event_date DESC LIMIT 6")->fetchAll(PDO::FETCH_ASSOC);
         $galleryImages = $pdo->query("SELECT * FROM gallery ORDER BY created_at DESC LIMIT 8")->fetchAll(PDO::FETCH_ASSOC);
@@ -49,14 +49,6 @@ try {
         $heroSlides = $pdo->query("SELECT * FROM hero_slides ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
     }
 } catch (Exception $e) { }
-
-if (empty($recentEvents)) {
-    $recentEvents = [
-        ['id' => 1, 'title' => 'Blood Donation Camp 2026', 'category' => 'Health', 'event_date' => date('Y-m-d H:i:s', strtotime('+10 days')), 'location' => 'College Premises, Madurai-11', 'description' => 'Annual blood donation camp in collaboration with Government Rajaji Hospital, Madurai.', 'image' => 'assets/images/nss-logo.png'],
-        ['id' => 2, 'title' => 'Mega Tree Plantation Drive', 'category' => 'Environment', 'event_date' => date('Y-m-d H:i:s', strtotime('+18 days')), 'location' => 'Campus & Bye-Pass Road', 'description' => 'Planting 500 indigenous saplings under Green India Clean India initiative.', 'image' => 'assets/images/nss-logo.png'],
-        ['id' => 3, 'title' => 'Village Adoption Special Camp', 'category' => 'Community', 'event_date' => date('Y-m-d H:i:s', strtotime('+30 days')), 'location' => 'Alanganallur Village, Madurai', 'description' => 'Annual special camp focusing on village sanitation, literacy and free medical health checkup.', 'image' => 'assets/images/nss-logo.png']
-    ];
-}
 
 // Fallback hero background slide images
 if (empty($heroSlides)) {
@@ -156,18 +148,18 @@ if (empty($heroSlides)) {
 }
 
 .hero-buttons .btn-primary {
-    background: linear-gradient(135deg, #f4a11d 0%, #d98200 100%);
-    color: #0d233a !important;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: #ffffff !important;
     font-weight: 800;
     padding: 0.85rem 2.2rem;
     font-size: 1.05rem;
     border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(244, 161, 29, 0.4);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .hero-buttons .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(244, 161, 29, 0.55);
+    box-shadow: var(--shadow-accent-glow);
 }
 
 .hero-buttons .btn-outline {
@@ -195,9 +187,9 @@ if (empty($heroSlides)) {
 .stats-card-row {
     max-width: 1200px;
     margin: 0 auto;
-    background: linear-gradient(135deg, #0d233a 0%, #1b365d 50%, #162e4f 100%);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-dark) 100%);
     border-radius: 22px;
-    box-shadow: 0 20px 60px rgba(13, 35, 58, 0.35), 0 0 0 1px rgba(244,161,29,0.15);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 0 0 1px var(--border-accent);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     overflow: hidden;
@@ -208,7 +200,7 @@ if (empty($heroSlides)) {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(244,161,29,0.08) 0%, transparent 50%, rgba(244,161,29,0.05) 100%);
+    background: linear-gradient(135deg, var(--accent-subtle) 0%, transparent 50%, var(--accent-subtle) 100%);
     pointer-events: none;
 }
 
@@ -224,7 +216,7 @@ if (empty($heroSlides)) {
 .stat-box:last-child { border-right: none; }
 
 .stat-box:hover {
-    background: rgba(244,161,29,0.08);
+    background: var(--accent-subtle);
     transform: translateY(-4px);
 }
 
@@ -232,28 +224,28 @@ if (empty($heroSlides)) {
     width: 52px;
     height: 52px;
     border-radius: 14px;
-    background: rgba(244,161,29,0.12);
-    border: 1px solid rgba(244,161,29,0.25);
+    background: var(--accent-subtle);
+    border: 1px solid var(--border-accent);
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 1rem;
     font-size: 1.3rem;
-    color: #f4a11d;
+    color: var(--accent);
     transition: all 0.3s ease;
 }
 
 .stat-box:hover .stat-icon {
-    background: rgba(244,161,29,0.2);
+    background: var(--accent-subtle);
     transform: scale(1.1) rotate(-5deg);
-    box-shadow: 0 4px 20px rgba(244,161,29,0.25);
+    box-shadow: var(--shadow-accent-glow);
 }
 
 .stat-number {
     font-family: 'Outfit', sans-serif;
     font-size: 3rem;
     font-weight: 800;
-    background: linear-gradient(180deg, #ffffff 30%, #f4a11d 100%);
+    background: linear-gradient(180deg, #ffffff 30%, var(--accent) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -262,7 +254,7 @@ if (empty($heroSlides)) {
 }
 
 .stat-label {
-    color: rgba(255,255,255,0.6);
+    color: rgba(255,255,255,0.7);
     font-size: 0.82rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -284,7 +276,7 @@ if (empty($heroSlides)) {
 .section-head h2 {
     font-family: 'Outfit', sans-serif;
     font-size: 2.5rem;
-    color: #1b365d;
+    color: var(--primary);
     margin-bottom: 0.75rem;
 }
 
@@ -298,7 +290,7 @@ if (empty($heroSlides)) {
 .gold-bar {
     width: 60px;
     height: 4px;
-    background: #f4a11d;
+    background: var(--accent);
     margin: 0.75rem auto 1rem;
     border-radius: 2px;
 }
@@ -311,7 +303,7 @@ if (empty($heroSlides)) {
 
 .value-card {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 2rem;
     transition: all 0.35s ease;
@@ -327,20 +319,20 @@ if (empty($heroSlides)) {
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, #1b365d, #f4a11d);
+    background: linear-gradient(90deg, var(--primary), var(--accent));
 }
 
 .value-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(27, 54, 93, 0.12);
-    border-color: #1b365d;
+    box-shadow: var(--shadow-hover);
+    border-color: var(--primary);
 }
 
 .value-icon {
     width: 56px;
     height: 56px;
-    background: rgba(27, 54, 93, 0.08);
-    color: #1b365d;
+    background: var(--primary-subtle);
+    color: var(--primary);
     border-radius: 14px;
     display: flex;
     align-items: center;
@@ -351,14 +343,14 @@ if (empty($heroSlides)) {
 }
 
 .value-card:hover .value-icon {
-    background: #1b365d;
-    color: #f4a11d;
+    background: var(--primary);
+    color: var(--accent);
     transform: scale(1.1);
 }
 
 .value-card h3 {
     font-size: 1.25rem;
-    color: #1b365d;
+    color: var(--primary);
     margin-bottom: 0.5rem;
 }
 
@@ -371,9 +363,9 @@ if (empty($heroSlides)) {
 
 /* FAQ Accordion */
 .faq-section {
-    background: #f8fafc;
+    background: var(--bg);
     padding: 90px 5%;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--border);
 }
 
 .faq-container {

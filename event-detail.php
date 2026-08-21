@@ -156,8 +156,8 @@ $pageTitle = htmlspecialchars($event['title']) . ' | NSS TNGPTC Madurai';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<div class="page-hero" style="padding: 90px 5% 40px; text-align: center; background: linear-gradient(135deg, #1b365d 0%, #0d233a 100%); border-bottom: 3px solid #f4a11d;">
-    <span class="badge" style="background:#f4a11d; color:#0d233a; padding:6px 16px; border-radius:20px; font-weight:700; margin-bottom:12px; display:inline-block; font-size:0.85rem;"><?= htmlspecialchars($event['category'] ?? 'General') ?></span>
+<div class="page-hero">
+    <span class="badge" style="background:var(--accent); color:#ffffff; padding:6px 16px; border-radius:20px; font-weight:700; margin-bottom:12px; display:inline-block; font-size:0.85rem;"><?= htmlspecialchars($event['category'] ?? 'General') ?></span>
     <h1 class="page-title" style="font-size:2.8rem; color:white; margin-bottom: 0.5rem;"><?= htmlspecialchars($event['title']) ?></h1>
     <p style="color:#cbd5e1; font-size:1.1rem;"><i class="fas fa-map-marker-alt text-accent"></i> <?= htmlspecialchars($event['location']) ?> • <i class="fas fa-calendar-alt text-accent"></i> <?= date('F d, Y - h:i A', $eventTimestamp) ?></p>
 </div>
@@ -210,24 +210,24 @@ require_once __DIR__ . '/includes/header.php';
         <!-- Left: Event Details -->
         <div>
             <?php if ($imgSrc): ?>
-                <img src="<?= htmlspecialchars($imgSrc) ?>" alt="<?= htmlspecialchars($event['title']) ?>" style="width:100%; height:380px; object-fit:cover; border-radius:18px; margin-bottom:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1); border:1px solid #e2e8f0;">
+                <img src="<?= htmlspecialchars($imgSrc) ?>" alt="<?= htmlspecialchars($event['title']) ?>" style="width:100%; height:380px; object-fit:cover; border-radius:18px; margin-bottom:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1); border:1px solid var(--border);">
             <?php endif; ?>
 
-            <div class="glass-panel" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:2rem; margin-bottom:30px; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
-                <h2 style="color:#1b365d; font-family:'Outfit',sans-serif; margin-bottom:1rem; font-size:1.6rem;">About This Activity</h2>
-                <p style="color:#475569; font-size:1.02rem; line-height:1.8; white-space:pre-line; margin:0;"><?= htmlspecialchars($event['description'] ?? 'No detailed description available.') ?></p>
+            <div class="glass-panel" style="background:#ffffff; border:1px solid var(--border); border-radius:18px; padding:2rem; margin-bottom:30px; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
+                <h2 style="color:var(--primary); font-family:'Outfit',sans-serif; margin-bottom:1rem; font-size:1.6rem;">About This Activity</h2>
+                <p style="color:var(--text-muted); font-size:1.02rem; line-height:1.8; white-space:pre-line; margin:0;"><?= htmlspecialchars($event['description'] ?? 'No detailed description available.') ?></p>
             </div>
         </div>
 
         <!-- Right: Registration Box / Status -->
-        <div class="glass-panel" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:2rem; box-shadow:0 10px 30px rgba(0,0,0,0.04); position:sticky; top:90px;">
-            <h3 style="color:#1b365d; font-family:'Outfit',sans-serif; margin-bottom:1.25rem; font-size:1.35rem;"><i class="fas fa-clipboard-check text-accent"></i> Registration Info</h3>
+        <div class="glass-panel" style="background:#ffffff; border:1px solid var(--border); border-radius:18px; padding:2rem; box-shadow:0 10px 30px rgba(0,0,0,0.04); position:sticky; top:90px;">
+            <h3 style="color:var(--primary); font-family:'Outfit',sans-serif; margin-bottom:1.25rem; font-size:1.35rem;"><i class="fas fa-clipboard-check text-accent"></i> Registration Info</h3>
 
-            <div style="margin-bottom:1.5rem; background:#f8fafc; padding:1.25rem; border-radius:12px; border:1px solid #e2e8f0;">
+            <div style="margin-bottom:1.5rem; background:var(--bg); padding:1.25rem; border-radius:12px; border:1px solid var(--border);">
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                    <span style="color:#64748b; font-size:0.9rem;">Status:</span>
+                    <span style="color:var(--text-muted); font-size:0.9rem;">Status:</span>
                     <?php if ($status === 'upcoming'): ?>
-                        <span class="badge" style="background:#1b365d; color:#ffffff; padding:4px 12px; border-radius:20px; font-weight:700; font-size:0.82rem;">Upcoming</span>
+                        <span class="badge" style="background:var(--primary); color:#ffffff; padding:4px 12px; border-radius:20px; font-weight:700; font-size:0.82rem;">Upcoming</span>
                     <?php elseif ($status === 'ongoing'): ?>
                         <span class="badge" style="background:#dcfce7; color:#166534; padding:4px 12px; border-radius:20px; font-weight:700; font-size:0.82rem;"><i class="fas fa-spinner fa-spin"></i> Ongoing Now</span>
                     <?php elseif ($status === 'completed'): ?>
@@ -240,13 +240,13 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
 
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                    <span style="color:#64748b; font-size:0.9rem;">Total Enrolled:</span>
-                    <strong style="color:#1b365d; font-size:1rem;"><?= $event['reg_count'] ?> Volunteers</strong>
+                    <span style="color:var(--text-muted); font-size:0.9rem;">Total Enrolled:</span>
+                    <strong style="color:var(--primary); font-size:1rem;"><?= $event['reg_count'] ?> Volunteers</strong>
                 </div>
 
                 <div style="display:flex; justify-content:space-between;">
-                    <span style="color:#64748b; font-size:0.9rem;">Date & Time:</span>
-                    <strong style="color:#1b365d; font-size:0.88rem;"><?= date('d M Y, h:i A', $eventTimestamp) ?></strong>
+                    <span style="color:var(--text-muted); font-size:0.9rem;">Date & Time:</span>
+                    <strong style="color:var(--primary); font-size:0.88rem;"><?= date('d M Y, h:i A', $eventTimestamp) ?></strong>
                 </div>
             </div>
 

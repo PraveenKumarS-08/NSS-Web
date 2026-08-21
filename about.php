@@ -7,9 +7,9 @@ require_once __DIR__ . '/includes/header.php';
 .about-hero {
     padding: 100px 5% 50px;
     text-align: center;
-    background: linear-gradient(135deg, #0d233a 0%, #1b365d 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white;
-    border-bottom: 3px solid #f4a11d;
+    border-bottom: 3px solid var(--accent);
 }
 
 .about-hero h1 {
@@ -20,7 +20,7 @@ require_once __DIR__ . '/includes/header.php';
 }
 
 .about-hero p {
-    color: #f4a11d;
+    color: var(--accent);
     font-size: 1.15rem;
     font-weight: 600;
 }
@@ -41,7 +41,7 @@ require_once __DIR__ . '/includes/header.php';
 
 .about-split h2 {
     font-size: 2.3rem;
-    color: #1b365d;
+    color: var(--primary);
     margin-bottom: 1.25rem;
     font-family: 'Outfit', sans-serif;
 }
@@ -55,11 +55,11 @@ require_once __DIR__ . '/includes/header.php';
 
 .emblem-card {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border);
     border-radius: 20px;
     padding: 2.5rem;
     text-align: center;
-    box-shadow: 0 10px 40px rgba(27, 54, 93, 0.08);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
 }
 
 .emblem-card img {
@@ -67,12 +67,12 @@ require_once __DIR__ . '/includes/header.php';
     height: 140px;
     margin: 0 auto 1.5rem;
     border-radius: 50%;
-    border: 4px solid #f4a11d;
+    border: 4px solid var(--accent);
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
 .emblem-card h3 {
-    color: #1b365d;
+    color: var(--primary);
     margin-bottom: 0.5rem;
 }
 
@@ -92,28 +92,28 @@ require_once __DIR__ . '/includes/header.php';
 
 .objective-item {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border);
     border-radius: 14px;
     padding: 1.75rem;
-    border-left: 4px solid #1b365d;
+    border-left: 4px solid var(--primary);
     box-shadow: 0 4px 15px rgba(0,0,0,0.03);
     transition: all 0.3s ease;
 }
 
 .objective-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(27, 54, 93, 0.1);
-    border-left-color: #f4a11d;
+    box-shadow: var(--shadow-hover);
+    border-left-color: var(--accent);
 }
 
 .objective-item i {
-    color: #f4a11d;
+    color: var(--accent);
     font-size: 1.5rem;
     margin-bottom: 1rem;
 }
 
 .objective-item h4 {
-    color: #1b365d;
+    color: var(--primary);
     font-size: 1.15rem;
     margin-bottom: 0.5rem;
 }
@@ -134,7 +134,7 @@ require_once __DIR__ . '/includes/header.php';
 
 .officer-card {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 2.2rem 1.5rem;
     text-align: center;
@@ -144,40 +144,40 @@ require_once __DIR__ . '/includes/header.php';
 
 .officer-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(27,54,93,0.12);
-    border-color: #1b365d;
+    box-shadow: var(--shadow-hover);
+    border-color: var(--primary);
 }
 
 .officer-avatar {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background: #1b365d;
-    color: #f4a11d;
+    background: var(--primary);
+    color: var(--accent);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2.5rem;
     margin: 0 auto 1.25rem;
-    border: 3px solid #f4a11d;
+    border: 3px solid var(--accent);
 }
 
 .officer-card h3 {
-    color: #1b365d;
+    color: var(--primary);
     font-size: 1.25rem;
     margin-bottom: 0.25rem;
 }
 
 .officer-card .role-badge {
     display: inline-block;
-    background: #f0f4f8;
-    color: #1b365d;
+    background: var(--primary-subtle);
+    color: var(--primary);
     font-weight: 700;
     font-size: 0.82rem;
     padding: 4px 12px;
     border-radius: 20px;
     margin-bottom: 1rem;
-    border: 1px solid rgba(27,54,93,0.15);
+    border: 1px solid var(--border-accent);
 }
 
 .officer-card p {

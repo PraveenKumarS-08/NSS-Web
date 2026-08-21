@@ -1,53 +1,44 @@
 /* 
  * ==========================================================================
  * NSS Tamil Nadu Government Polytechnic College Madurai-11
- * Main Stylesheet — Professional NSS Theme
- * Primary: NSS Navy Blue (#1b365d) | Accent: NSS Gold (#f4a11d) | Highlight: NSS Maroon (#b71c1c)
+ * Main Stylesheet — Royal Maroon & Saffron Theme
+ * Primary: Tamil Nadu Royal Maroon (#5c061a) | Accent: Indian Saffron (#e65100)
  * ==========================================================================
  */
 
 :root {
-    /* NSS Official Color Palette */
-    --primary: #1b365d;
-    --primary-dark: #0d233a;
-    --primary-light: #2a4a7f;
-    --primary-subtle: rgba(27, 54, 93, 0.08);
-    --accent: #f4a11d;
-    --accent-light: #f4a11d;
-    --accent-dark: #d98200;
-    --accent-subtle: rgba(244, 161, 29, 0.12);
-    --nss-red: #b71c1c;
-    
-    /* Backgrounds — warm off-white, not pure white */
-    --bg: #f0f2f5;
+    /* Royal Maroon & Indian Saffron Official Palette */
+    --primary: #5c061a;
+    --primary-dark: #36020d;
+    --primary-light: #830b27;
+    --primary-subtle: rgba(92, 6, 26, 0.08);
+    --accent: #e65100;
+    --accent-light: #f57c00;
+    --accent-dark: #bf360c;
+    --accent-subtle: rgba(230, 81, 0, 0.14);
+    --nss-blue: #5c061a;
+    --nss-navy: #36020d;
+    --nss-red: #881337;
+    --nss-gold: #e65100;
+    --nss-gold-dark: #bf360c;
+    --light-bg: #faf6f6;
+    --bg: #f3ebeb;
     --bg-surface: #ffffff;
-    --bg-card: #ffffff;
-    --bg-card-hover: #fafbfc;
-    --bg-alt: #edf0f4;
-    --bg-section-alt: #f5f7fa;
-    
-    /* Borders and Shadows — deeper, more visible */
-    --border: #dde1e7;
-    --border-accent: rgba(244, 161, 29, 0.4);
+    --border: #e2d6d6;
+    --border-accent: rgba(230, 81, 0, 0.4);
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    --shadow-hover: 0 12px 35px rgba(27, 54, 93, 0.14);
-    --shadow-accent-glow: 0 8px 25px rgba(244, 161, 29, 0.25);
-    
-    /* Typography */
+    --shadow-hover: 0 12px 35px rgba(92, 6, 26, 0.16);
+    --shadow-accent-glow: 0 8px 25px rgba(230, 81, 0, 0.25);
     --text: #0f172a;
     --text-dark: #0f172a;
     --text-muted: #475569;
     --text-dim: #64748b;
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
-    
-    /* Spacing and Radius */
     --radius: 10px;
     --radius-lg: 14px;
     --radius-full: 9999px;
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* Z-Index Layers */
     --z-particles: 0;
     --z-base: 1;
     --z-nav: 1000;
@@ -944,3 +935,28 @@ img {
     .footer-bottom { font-size: 0.78rem; }
     body { font-size: 0.93rem; }
 }
+
+/* ==========================================================================
+   Page Hero & Global Theme Elements
+   ========================================================================== */
+
+/* Page Hero Default */
+.page-hero {
+    padding: 90px 5% 40px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+    border-bottom: 3px solid var(--accent) !important;
+}
+
+.page-hero .page-title {
+    font-size: 2.8rem;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.page-hero p {
+    color: var(--accent) !important;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
