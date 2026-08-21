@@ -49,6 +49,9 @@ $admin_name = $_SESSION['name'] ?? $_SESSION['user_data']['name'] ?? 'NSS Admin'
         <a href="admin-gallery.php" class="<?= $current_page == 'admin-gallery.php' ? 'active' : '' ?>">
             <i class="fas fa-images"></i> Photo Gallery
         </a>
+        <a href="admin-hero-slides.php" class="<?= $current_page == 'admin-hero-slides.php' ? 'active' : '' ?>">
+            <i class="fas fa-sliders-h"></i> Homepage Hero Slider
+        </a>
         <a href="admin-announcements.php" class="<?= $current_page == 'admin-announcements.php' ? 'active' : '' ?>">
             <i class="fas fa-bullhorn"></i> Announcements
         </a>

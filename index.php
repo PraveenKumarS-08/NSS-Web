@@ -46,16 +46,16 @@ try {
         $recentEvents = $pdo->query("SELECT * FROM events ORDER BY event_date DESC LIMIT 6")->fetchAll(PDO::FETCH_ASSOC);
         $galleryImages = $pdo->query("SELECT * FROM gallery ORDER BY created_at DESC LIMIT 8")->fetchAll(PDO::FETCH_ASSOC);
         $announcements = $pdo->query("SELECT * FROM announcements ORDER BY created_at DESC LIMIT 4")->fetchAll(PDO::FETCH_ASSOC);
-        $heroSlides = $pdo->query("SELECT * FROM hero_slides ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
+        $heroSlides = $pdo->query("SELECT * FROM hero_slides WHERE is_active = 1 ORDER BY order_num ASC, created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
     }
 } catch (Exception $e) { }
 
-// Fallback hero background slide images
+// Default high-res community service fallback slides if none uploaded yet
 if (empty($heroSlides)) {
     $heroSlides = [
-        ['image_path' => 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1600&auto=format&fit=crop&q=80', 'title' => 'Tree Plantation & Environmental Protection'],
-        ['image_path' => 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=1600&auto=format&fit=crop&q=80', 'title' => 'Blood Donation Drive'],
-        ['image_path' => 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600&auto=format&fit=crop&q=80', 'title' => 'Youth Leadership & Social Service']
+        ['image_path' => 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1600&auto=format&fit=crop&q=80', 'title' => 'Not Me, But You', 'caption' => 'Welcome to the official NSS portal of Tamil Nadu Government Polytechnic College, Madurai. Building youth leadership, social responsibility, and national unity through selfless service.'],
+        ['image_path' => 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=1600&auto=format&fit=crop&q=80', 'title' => 'Health & Blood Donation', 'caption' => 'Voluntarily donating blood, organizing health camps, and saving precious lives across Madurai district.'],
+        ['image_path' => 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600&auto=format&fit=crop&q=80', 'title' => 'Youth Leadership & Nation Building', 'caption' => 'Parade drills, village adoption special camps, and cultivating selfless discipline among diploma engineers.']
     ];
 }
 ?>
@@ -459,17 +459,20 @@ if (empty($heroSlides)) {
 <!-- ===== AUTO-SCROLLING HERO SLIDER ===== -->
 <div class="hero-swiper-container swiper myHeroSwiper">
     <div class="swiper-wrapper">
-        <?php foreach ($heroSlides as $slide): ?>
-        <div class="swiper-slide" style="background-image: url('<?= htmlspecialchars($slide['image_path']) ?>');">
+        <?php foreach ($heroSlides as $slide): 
+            $slideImg = strpos($slide['image_path'], 'http') === 0 ? $slide['image_path'] : $slide['image_path'];
+            $slideTitle = !empty($slide['title']) ? $slide['title'] : 'Not Me, But You';
+            $slideDesc = !empty($slide['caption']) ? $slide['caption'] : 'Welcome to the official NSS portal of Tamil Nadu Government Polytechnic College, Madurai. Building youth leadership, social responsibility, and national unity through selfless service.';
+        ?>
+        <div class="swiper-slide" style="background-image: url('<?= htmlspecialchars($slideImg) ?>');">
             <div class="hero-content-overlay" data-aos="zoom-in">
                 <div class="hero-pill">
                     <i class="fas fa-award"></i> National Service Scheme • TNGPTC Madurai-11
                 </div>
-                <h1 class="hero-title-main">Not Me, But You</h1>
+                <h1 class="hero-title-main"><?= htmlspecialchars($slideTitle) ?></h1>
                 <div class="hero-motto-tamil">எனக்கல்ல, உனக்கே</div>
                 <p class="hero-desc">
-                    Welcome to the official NSS portal of Tamil Nadu Government Polytechnic College, Madurai.
-                    Building youth leadership, social responsibility, and national unity through selfless service.
+                    <?= htmlspecialchars($slideDesc) ?>
                 </p>
                 <div class="hero-buttons">
                     <?php if (isset($_SESSION['user_id'])): ?>
