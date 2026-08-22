@@ -8,7 +8,7 @@ requireLogin('admin');
 
 $error = '';
 $success = '';
-
+66
 // Handle Create / Edit / Delete / Toggle Slide
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
